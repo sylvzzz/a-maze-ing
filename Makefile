@@ -1,5 +1,5 @@
 CONFIG	= config.txt
-MAIN	= a_maze_ing.py
+MAIN	= rascunho.py
 
 build:
 	poetry build

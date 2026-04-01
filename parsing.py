@@ -65,15 +65,15 @@ def is_valid_data(configs: dict) -> bool:
         or entry_row > width
             or entry_col < 0
             or entry_col > height):
-        print(f"Invalid entry coordinates. "
-              f"Entry coordinates: {configs["ENTRY"]}")
+        print(f'Invalid entry coordinates. '
+              f'Entry coordinates: {configs["ENTRY"]}')
         return False
     if (exit_row < 0
         or exit_row > width
             or exit_col < 0
             or exit_col > height):
         print(f"Invalid exit coordinates. "
-              f"Exit coordinates: {configs["EXIT"]}")
+              f"Exit coordinates: {configs['EXIT']}")
         return False
     return True
 
@@ -83,8 +83,8 @@ def main() -> None:
         configs = parse_values()
         for key, value in configs.items():
             if key == "ENTRY" or key == "EXIT":
-                print(f"Max Values: X:{configs["HEIGHT"]} "
-                      f"Y:{configs["WIDTH"]}")
+                print(f"Max Values: X:{configs['HEIGHT']} "
+                      f"Y:{configs['WIDTH']}")
             print(f"{key} : {value}")
             print()
 
