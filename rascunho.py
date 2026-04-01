@@ -95,13 +95,16 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    os.system("clear")
-    print("\n")
-    main()
-    print("\n")
-    print("=== A-Maze-ing ===")
-    print("1. Re-generate a new maze")
-    print("2. Show/Hide path from entry to exit")
-    print("3. Rotate maze colors")
-    print("4. Quit")
-    choice = input("Choice? (1-4): ")
+    while True:
+        os.system("clear")
+        print("\n")
+        main()
+        print("\n")
+        print("=== A-Maze-ing ===")
+        print("1. Re-generate a new maze")
+        print("2. Show/Hide path from entry to exit")
+        print("3. Rotate maze colors")
+        print("4. Quit")
+        choice = int(input("Choice? (1-4): "))
+        if choice == 4:
+            break
