@@ -1,93 +1,42 @@
-import sys
+PSEUDOCODIGO: parsing.py
 
+OBJETIVO
+- Ler config.txt e transformar em estrutura de configuracao.
+- Validar campos obrigatorios do projeto A-Maze-ing.
 
-def parse_values() -> dict:
-    values = {}
-    try:
-        with open("config.txt", "r") as file:
-            for line in file:
-                line = line.strip()
+FUNCAO parse_values()
+1. iniciar dicionario CONFIG_VAZIO
+2. tentar abrir ficheiro config.txt
+3. para cada LINHA no ficheiro:
+   3.1 remover espacos nas pontas
+   3.2 se linha vazia ou comecar por # -> continuar
+   3.3 separar por '=' em CHAVE e VALOR
+   3.4 normalizar CHAVE e VALOR
+   3.5 converter VALOR:
+       - se true/false -> booleano
+       - se formato x,y -> tuplo de inteiros
+       - se numero -> inteiro
+       - senao -> texto
+   3.6 guardar em CONFIG_VAZIO[CHAVE] = VALOR
+4. tratar erros comuns:
+   - ficheiro inexistente
+   - permissao negada
+   - valor invalido
+5. devolver CONFIG_VAZIO
 
-                # Ignorar comentários e linhas vazias
-                if not line or line.startswith("#"):
-                    continue
+FUNCAO is_valid_data(CONFIG)
+1. confirmar que WIDTH e HEIGHT existem e sao > 0
+2. confirmar que ENTRY e EXIT existem no formato (x, y)
+3. confirmar limites:
+   - 0 <= entry_x < WIDTH
+   - 0 <= entry_y < HEIGHT
+   - 0 <= exit_x < WIDTH
+   - 0 <= exit_y < HEIGHT
+4. confirmar que OUTPUT_FILE existe ou usar default maze.txt
+5. confirmar que PERFECT existe ou usar default True
+6. devolver True se tudo valido, senao False
 
-                if "=" in line:
-                    key, value = line.split("=", 1)
-                    key = key.strip()
-                    value = value.strip()
-
-                    # Converter tipos automaticamente
-                    if value.lower() in ("true", "false"):
-                        value = value.lower() == "true"
-                    elif "," in value:  # coordenadas
-                        value = tuple(map(int, value.split(",")))
-                    elif value.isdigit():
-                        value = int(value)
-
-                    values[key] = value
-    except FileNotFoundError:
-        print("Error: File Not Found")
-    except IsADirectoryError:
-        print("Output file cannot be dirctory")
-        sys.exit(1)
-    except Exception as err:
-        print(err)
-        sys.exit(1)
-    return values
-
-
-"""
-WIDTH=20
-HEIGHT=15
-ENTRY=0,0
-EXIT=19,14
-OUTPUT_FILE=maze.txt
-PERFECT=True
-
-x axis = WIDTH
-y axis = HEIGHT
-"""
-
-
-def is_valid_data(configs: dict) -> bool:
-    width = configs["WIDTH"]
-    height = configs["HEIGHT"]
-    entry_row, entry_col = configs["ENTRY"]
-    exit_row, exit_col = configs["EXIT"]
-    if width <= 0:
-        print("Invalid width.")
-        return False
-    if height <= 0:
-        print("Invalid height.")
-        return False
-    if (entry_row < 0
-        or entry_row > width
-            or entry_col < 0
-            or entry_col > height):
-        print(f'Invalid entry coordinates. '
-              f'Entry coordinates: {configs["ENTRY"]}')
-        return False
-    if (exit_row < 0
-        or exit_row > width
-            or exit_col < 0
-            or exit_col > height):
-        print(f"Invalid exit coordinates. "
-              f"Exit coordinates: {configs['EXIT']}")
-        return False
-    return True
-
-
-def main() -> None:
-    if is_valid_data(parse_values()):
-        configs = parse_values()
-        for key, value in configs.items():
-            if key == "ENTRY" or key == "EXIT":
-                print(f"Max Values: X:{configs['HEIGHT']} "
-                      f"Y:{configs['WIDTH']}")
-            print(f"{key} : {value}")
-            print()
-
-
-if __name__ == "__main__":
-    main()
+FLUXO MAIN (ALTO NIVEL)
+1. configs = parse_values()
+2. se is_valid_data(configs) for False -> terminar com erro
+3. mostrar resumo dos parametros lidos

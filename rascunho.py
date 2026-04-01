@@ -1,110 +1,43 @@
-import sys
-import os
-from parsing import parse_values, is_valid_data
+PSEUDOCODIGO: rascunho.py (UI terminal)
 
+OBJETIVO
+- Mostrar o maze no terminal em modo visual.
+- Permitir gerar novo maze, alternar caminho e mudar tema de cor.
 
-N, S, E, W = 0x8, 0x4, 0x2, 0x1
+CONSTANTES
+- BITS DE PAREDE: N=8, E=2, S=4, W=1
+- PALETAS DE CORES: WALL, PASSAGE, ENTRY, EXIT, PATH
 
+FUNCAO parse_grid(caminho)
+1. abrir ficheiro de saida do maze
+2. ler linha a linha
+3. ignorar linhas vazias
+4. converter cada valor hexadecimal para inteiro
+5. devolver matriz 2D
 
-def bg(r, g, b):
-    return f"\033[48;2;{r};{g};{b}m"
+FUNCAO render(grid, entry, exit, path, show_path)
+1. converter entry/exit de (x,y) para indices de matriz
+2. criar conjunto de posicoes do caminho se show_path=True
+3. desenhar moldura superior
+4. para cada linha da grelha:
+   4.1 desenhar interior das celulas
+   4.2 colorir entry, exit, path ou passagem normal
+   4.3 desenhar paredes verticais conforme bit E
+   4.4 desenhar linha de paredes horizontais conforme bit S
+5. devolver string final a imprimir
 
+FUNCAO build_and_render(configs, path, show_path)
+1. ler ficheiro OUTPUT_FILE
+2. validar dimensoes da grelha contra WIDTH/HEIGHT
+3. chamar render(...)
+4. devolver representacao textual
 
-RESET = "\033[0m"
-
-WALL = bg(220, 220, 220)
-PASSAGE = bg(10, 10, 10)
-ENTRY = bg(180, 0, 220)
-EXIT = bg(200, 30, 30)
-
-
-def parse_grid(path: str) -> list[list[int]]:
-    grid = []
-    try:
-        with open(path) as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                grid.append([int(v, 16) for v in line.split()])
-    except FileNotFoundError:
-        print(f"Error: maze file '{path}' not found.")
-        sys.exit(1)
-    return grid
-
-
-def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
-    rows, cols = len(grid), len(grid[0])
-    # ENTRY/EXIT from config are (col, row) i.e. (x, y) — convert to (row, col)
-    entry_pos = (entry[1], entry[0])
-    exit_pos = (exit_[1], exit_[0])
-    out = []
-
-    out.append(WALL + " " * (cols * 4 + 1) + RESET)
-
-    for r in range(rows):
-        row = WALL + " " + RESET
-        for c in range(cols):
-            cell = grid[r][c]
-            if (r, c) == entry_pos:
-                fill = ENTRY
-            elif (r, c) == exit_pos:
-                fill = EXIT
-            else:
-                fill = PASSAGE
-            row += fill + "   " + RESET
-            row += (WALL if cell & E else PASSAGE) + " " + RESET
-        out.append(row)
-
-        wall_row = WALL + " " + RESET
-        for c in range(cols):
-            wall_row += (
-                (WALL if grid[r][c] & S else PASSAGE) + "   " + RESET
-            )
-            wall_row += WALL + " " + RESET
-        out.append(wall_row)
-
-    return "\n".join(out)
-
-
-def main() -> None:
-    configs = parse_values()
-
-    if not is_valid_data(configs):
-        sys.exit(1)
-
-    output_file = configs.get("OUTPUT_FILE", "maze.txt")
-    grid = parse_grid(output_file)
-
-    expected_rows = configs["HEIGHT"]
-    expected_cols = configs["WIDTH"]
-    actual_rows = len(grid)
-    actual_cols = len(grid[0]) if grid else 0
-
-    if actual_rows != expected_rows or any(
-        len(row) != expected_cols for row in grid
-    ):
-        print(
-            f"Error: grid in '{output_file}' is "
-            f"{actual_rows}x{actual_cols}, "
-            f"expected {expected_rows}x{expected_cols}."
-        )
-        sys.exit(1)
-
-    print(render(grid, entry=configs["ENTRY"], exit_=configs["EXIT"]))
-
-
-if __name__ == "__main__":
-    while True:
-        os.system("clear")
-        print("\n")
-        main()
-        print("\n")
-        print("=== A-Maze-ing ===")
-        print("1. Re-generate a new maze")
-        print("2. Show/Hide path from entry to exit")
-        print("3. Rotate maze colors")
-        print("4. Quit")
-        choice = int(input("Choice? (1-4): "))
-        if choice == 4:
-            break
+FUNCAO main()
+1. carregar configs e validar
+2. gerar maze inicial com pipeline do motor
+3. iniciar loop de menu:
+   - opcao 1: gerar maze novo
+   - opcao 2: mostrar/esconder caminho
+   - opcao 3: trocar tema de cores
+   - opcao 4: sair
+4. limpar ecra e re-renderizar a cada acao

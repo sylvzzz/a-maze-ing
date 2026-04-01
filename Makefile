@@ -1,29 +1,25 @@
-CONFIG	= config.txt
-MAIN	= rascunho.py
+PSEUDOCODIGO: Makefile
 
-build:
-	poetry build
+OBJETIVO
+- Descrever tarefas de desenvolvimento sem comandos reais.
 
-install: build
-	pip install dist/*.whl
-	pip install flake8 mypy
+TARGET build
+1. preparar artefactos do projeto
 
-run:
-	python3 $(MAIN) $(CONFIG)
+TARGET install
+1. instalar dependencias de runtime
+2. instalar ferramentas de lint
 
-debug:
-	python3 -m pdb $(MAIN) $(CONFIG)
+TARGET run
+1. executar aplicacao principal com config.txt
 
-clean:
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type d -name ".mypy_cache" -exec rm -rf {} +
-	find . -type d -name "build" -exec rm -rf {} +
-	find . -type f -name "*.pyc" -exec rm -f {} +
+TARGET debug
+1. executar aplicacao em modo debug
 
+TARGET clean
+1. apagar caches temporarias
+2. apagar ficheiros compilados
 
-lint:
-	flake8 . --exclude test_env
-	mypy . --exclude test_env --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
-
-
-.PHONY: build install run debug clean lint
+TARGET lint
+1. correr verificador de estilo
+2. correr verificador de tipos
