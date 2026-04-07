@@ -1,44 +1,45 @@
-PSEUDOCODIGO: maze_engine/maze.py
+from typing import Optional
+import cell
+from .directions import DIRECTIONS, MOVES, OPPOSITE
 
-OBJETIVO
-- Representar a grelha completa do labirinto.
+class Maze:
+    def __init__(self, width: int, height: int, entry: tuple[int, int],
+                 exit: tuple[int, int], perfect: bool) -> None:
+        self.width = width
+        self.height = height
+        self.entry = entry
+        self.exit = exit
+        self.perfect = perfect
+        self.grid = [[cell.Cell(x, y) for x in range(width)] for y in range(height)]]
 
-ESTRUTURA Maze
-- width, height
-- entry, exit
-- seed opcional
-- grid: lista 2D de Cell
+    def is_within_bonds(self, x: int, y: int) -> bool:
+        if (0 <= y < self.height) and (0 <= x < self.width):
+            return True
+        return False
+    
+    def get_cell(self, x: int, y: int) -> Optional[cell.Cell]:
+        if self.is_within_bonds(x, y) is True:
+            return self.grid[y][x]
+        return None
 
-INICIALIZACAO
-1. guardar parametros
-2. criar grid com height linhas e width colunas
-3. em cada posicao criar Cell(x, y)
+    def get_neighbors(self, current_cell: cell.Cell) -> list[tuple[str, cell.Cell]]:
+        found_neighbors = list()
+        for direction in DIRECTIONS:
+            nx = current_cell.x + MOVES[direction][0]
+            ny = current_cell.y + MOVES[direction][1]
+            neighbor = self.get_cell(nx, ny)
+            if neighbor is not None:
+                found_neighbors.append((direction, neighbor))
+        return found_neighbors
 
-METODOS
-- is_inside(x, y):
-  devolver True se coordenada dentro dos limites
-
-- get_cell(x, y):
-  se fora dos limites -> nulo
-  senao -> grid[y][x]
-
-- get_neighbors(cell, only_unvisited=False):
-  para cada direcao em CARDINAL_DIRECTIONS:
-    calcular (nx, ny)
-    obter vizinho com get_cell
-    se existir e condicao de visited permitir -> adicionar
-  devolver lista de (neighbor, direction)
-
-- remove_wall_between(first, second, direction):
-  remover parede de first na direction
-  remover parede de second na direcao oposta
-
-- reset_search_state():
-  percorrer todas as celulas e limpar visited/parent
-
-- to_hex_lines():
-  converter cada celula para 1 digito hexadecimal
-  devolver linhas separadas por espaco
-
-- to_hex_string():
-  juntar linhas com quebra de linha
+    def break_wall(self, current_cell: cell.Cell, neighbor: cell.Cell) -> None:
+        if neighbor.x > current_cell.x:
+            direction = "E"
+        elif neighbor.x < current_cell.x:
+            direction = "W"
+        elif neighbor.y > current_cell.y:
+            direction = "S"
+        elif neighbor.y < current_cell.y:
+            direction = "N"
+        current_cell.remove_wall(direction)
+        neighbor.remove_wall(OPPOSITE[direction])

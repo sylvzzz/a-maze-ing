@@ -1,22 +1,52 @@
-PSEUDOCODIGO: maze_engine/cell.py
+import directions
 
-OBJETIVO
-- Definir a entidade Cell (celula individual do maze).
 
-ESTRUTURA Cell
-- x: inteiro
-- y: inteiro
-- walls: inteiro em bitmask (inicia com ALL_WALLS)
-- visited: booleano (inicia False)
-- parent: referencia para outra Cell ou nulo
+class Cell:
+    def __init__(self, x: int, y: int) -> None:
+        self.x = x
+        self.y = y
+        self.north = True
+        self.east = True
+        self.south = True
+        self.west = True
+        self.visited = False
 
-METODOS
-- has_wall(direction):
-  devolver True se o bit da direcao estiver ativo
+    def remove_wall(self, direction: str) -> None:
+        if direction == directions.N:
+            self.north = False
+        elif direction == directions.E:
+            self.east = False
+        elif direction == directions.S:
+            self.south = False
+        elif direction == directions.W:
+            self.west = False
+        else:
+            raise ValueError("Invalid direction")
 
-- remove_wall(direction):
-  limpar bit da direcao em walls
+    def has_wall(self, direction: str) -> bool:
+        if direction == directions.N:
+            return self.north
+        elif direction == directions.E:
+            return self.east
+        elif direction == directions.S:
+            return self.south
+        elif direction == directions.W:
+            return self.west
+        else:
+            raise ValueError("Invalid direction")
 
-- reset_search_state():
-  visited = False
-  parent = nulo
+    def mark_visited(self) -> None:
+        if self.visited is False:
+            self.visited = True
+
+    def reset_visited(self) -> None:
+        if self.visited is True:
+            self.visited = False
+
+    def get_walls(self) -> dict:
+        return {
+            directions.N: self.north,
+            directions.E: self.east,
+            directions.S: self.south,
+            directions.W: self.west
+        }
