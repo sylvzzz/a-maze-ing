@@ -2,6 +2,7 @@ import sys
 import os
 from parsing import parse_values, is_valid_data
 
+
 # Direções (Bitmask)
 N, S, E, W = 0x8, 0x4, 0x2, 0x1
 
@@ -120,11 +121,11 @@ def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
     start_c = cols // 2 - 6
 
     t = get_theme()
-    WALL    = t["wall"]
+    WALL = t["wall"]
     PASSAGE = t["passage"]
-    ENTRY   = t["entry"]
-    EXIT    = t["exit"]
-    NUMBER  = t["number"]
+    ENTRY = t["entry"]
+    EXIT = t["exit"]
+    NUMBER = t["number"]
 
     out = []
 
@@ -167,7 +168,8 @@ def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
             if in_42 and below_in_42:
                 wall_row += NUMBER + "   " + RESET
             else:
-                wall_row += (WALL if has_south_wall else PASSAGE) + "   " + RESET
+                color = WALL if has_south_wall else PASSAGE
+                wall_row += color + "   " + RESET
 
             wall_row += WALL + " " + RESET
 
@@ -187,7 +189,8 @@ def main() -> None:
 
     expected_rows = configs["HEIGHT"]
     expected_cols = configs["WIDTH"]
-    if len(grid) != expected_rows or any(len(row) != expected_cols for row in grid):
+    wrong_cols = any(len(row) != expected_cols for row in grid)
+    if len(grid) != expected_rows or wrong_cols:
         print("Erro: Dimensões do grid inconsistentes com config.txt")
         sys.exit(1)
 
@@ -207,6 +210,7 @@ def show_menu() -> None:
 
 
 if __name__ == "__main__":
+    os.system("clear")
     show_menu()
     while True:
         try:

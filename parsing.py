@@ -1,8 +1,9 @@
 import sys
+from typing import Any
 
 
-def parse_values() -> dict:
-    values = {}
+def parse_values() -> dict[str, Any]:
+    values: dict[str, Any] = {}
     try:
         with open("config.txt", "r") as file:
             for line in file:
@@ -13,19 +14,22 @@ def parse_values() -> dict:
                     continue
 
                 if "=" in line:
-                    key, value = line.split("=", 1)
+                    key, raw = line.split("=", 1)
                     key = key.strip()
-                    value = value.strip()
+                    raw = raw.strip()
 
                     # Converter tipos automaticamente
-                    if value.lower() in ("true", "false"):
-                        value = value.lower() == "true"
-                    elif "," in value:  # coordenadas
-                        value = tuple(map(int, value.split(",")))
-                    elif value.isdigit():
-                        value = int(value)
+                    parsed: Any
+                    if raw.lower() in ("true", "false"):
+                        parsed = raw.lower() == "true"
+                    elif "," in raw:  # coordenadas
+                        parsed = tuple(map(int, raw.split(",")))
+                    elif raw.isdigit():
+                        parsed = int(raw)
+                    else:
+                        parsed = raw
 
-                    values[key] = value
+                    values[key] = parsed
     except FileNotFoundError:
         print("Error: File Not Found")
     except IsADirectoryError:
@@ -50,7 +54,7 @@ y axis = HEIGHT
 """
 
 
-def is_valid_data(configs: dict) -> bool:
+def is_valid_data(configs: dict[str, Any]) -> bool:
     width = configs["WIDTH"]
     height = configs["HEIGHT"]
     entry_row, entry_col = configs["ENTRY"]
@@ -78,7 +82,7 @@ def is_valid_data(configs: dict) -> bool:
     return True
 
 
-def main() -> None:
+def print_data() -> None:
     if is_valid_data(parse_values()):
         configs = parse_values()
         for key, value in configs.items():
@@ -90,4 +94,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    print_data()

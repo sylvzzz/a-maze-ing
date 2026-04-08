@@ -2,7 +2,7 @@ CONFIG	= config.txt
 MAIN	= rascunho.py
 
 build:
-	poetry build
+	pip install -r requirements.txt
 
 install: build
 	pip install dist/*.whl
@@ -22,8 +22,12 @@ clean:
 
 
 lint:
-	flake8 . --exclude test_env
-	mypy . --exclude test_env --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	python3 -m flake8 . --exclude a-maze-ing
+	python3 -m mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+
+lint-strict:
+	python3 -m flake8 . --exclude a-maze-ing
+	python3 -m mypy . --strict --exclude a-maze-ing
 
 
-.PHONY: build install run debug clean lint
+.PHONY: build install run debug clean lint lint-strict
