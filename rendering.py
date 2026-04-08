@@ -12,21 +12,53 @@ def bg(r, g, b):
 
 RESET = "\033[0m"
 
-# Cores
-WALL = bg(220, 220, 220)
-PASSAGE = bg(10, 10, 10)
-ENTRY = bg(180, 0, 220)
-EXIT = bg(200, 30, 30)
-NUMBER = bg(180, 180, 180)  # Cor cinza claro para o "42"
+# Temas de cores
+THEMES = {
+    "default": {
+        "wall":    bg(220, 220, 220),
+        "passage": bg(10, 10, 10),
+        "entry":   bg(180, 0, 220),
+        "exit":    bg(200, 30, 30),
+        "number":  bg(180, 180, 180),
+    },
+    "ocean": {
+        "wall":    bg(0, 80, 120),
+        "passage": bg(0, 20, 40),
+        "entry":   bg(0, 200, 180),
+        "exit":    bg(255, 100, 0),
+        "number":  bg(0, 120, 160),
+    },
+    "forest": {
+        "wall":    bg(60, 90, 40),
+        "passage": bg(10, 20, 10),
+        "entry":   bg(180, 220, 50),
+        "exit":    bg(200, 80, 30),
+        "number":  bg(80, 120, 60),
+    },
+    "lava": {
+        "wall":    bg(80, 20, 0),
+        "passage": bg(15, 5, 0),
+        "entry":   bg(255, 200, 0),
+        "exit":    bg(255, 60, 0),
+        "number":  bg(120, 40, 0),
+    },
+}
+
+theme_names = list(THEMES.keys())
+theme_index = 0
 
 # 🔢 Matriz do "42" (1 = Bloco, 0 = Fundo)
 SHAPE_42 = [
-    "100010011110",
-    "100010010001",
-    "111110000110",
-    "000010001000",
-    "000010011111",
+    "0010000111",
+    "0010000001",
+    "0011100111",
+    "0000100100",
+    "0000100111",
 ]
+
+
+def get_theme():
+    return THEMES[theme_names[theme_index]]
 
 
 def is_42(r, c, start_r, start_c):
@@ -54,21 +86,12 @@ def parse_grid(path: str) -> list[list[int]]:
 
 def cell_has_wall(grid: list[list[int]], r: int, c: int, direction: int,
                   start_r: int, start_c: int) -> bool:
-    """
-    Devolve True se deve ser desenhada uma parede nessa direção.
-    Regras:
-      1. Se a célula atual pertence ao "42" → sempre parede em todas as direções.
-      2. Se a célula vizinha (na direção pedida) pertence ao "42" → parede também.
-      3. Caso contrário, usa o bitmask normal do grid.
-    """
     rows = len(grid)
     cols = len(grid[0])
 
-    # Célula atual é parte do "42"
     if is_42(r, c, start_r, start_c):
         return True
 
-    # Verificar vizinho na direção
     if direction == S:
         nr, nc = r + 1, c
     elif direction == N:
@@ -80,12 +103,10 @@ def cell_has_wall(grid: list[list[int]], r: int, c: int, direction: int,
     else:
         nr, nc = r, c
 
-    # Vizinho dentro dos limites e faz parte do "42"
     if 0 <= nr < rows and 0 <= nc < cols:
         if is_42(nr, nc, start_r, start_c):
             return True
 
-    # Lógica normal: bit do grid
     return bool(grid[r][c] & direction)
 
 
@@ -95,23 +116,26 @@ def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
     entry_pos = (entry[1], entry[0])
     exit_pos = (exit_[1], exit_[0])
 
-    # Centralizar o "42"
     start_r = rows // 2 - 2
     start_c = cols // 2 - 6
 
+    t = get_theme()
+    WALL    = t["wall"]
+    PASSAGE = t["passage"]
+    ENTRY   = t["entry"]
+    EXIT    = t["exit"]
+    NUMBER  = t["number"]
+
     out = []
 
-    # Borda superior do labirinto
     out.append(WALL + " " * (cols * 4 + 1) + RESET)
 
     for r in range(rows):
-        # Parede lateral esquerda
         row = WALL + " " + RESET
 
         for c in range(cols):
             in_42 = is_42(r, c, start_r, start_c)
 
-            # Cor da célula
             if in_42:
                 fill = NUMBER
             elif (r, c) == entry_pos:
@@ -123,10 +147,8 @@ def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
 
             row += fill + "   " + RESET
 
-            # Parede ESTE (direita)
             has_east_wall = cell_has_wall(grid, r, c, E, start_r, start_c)
 
-            # Se ambas as células (atual e direita) são "42", conector também é "42"
             right_in_42 = is_42(r, c + 1, start_r, start_c)
             if in_42 and right_in_42:
                 row += NUMBER + " " + RESET
@@ -135,7 +157,6 @@ def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
 
         out.append(row)
 
-        # Linha de paredes SUL (baixo)
         wall_row = WALL + " " + RESET
         for c in range(cols):
             in_42 = is_42(r, c, start_r, start_c)
@@ -143,13 +164,11 @@ def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
 
             has_south_wall = cell_has_wall(grid, r, c, S, start_r, start_c)
 
-            # Se célula atual e a de baixo são "42", conector também é "42"
             if in_42 and below_in_42:
                 wall_row += NUMBER + "   " + RESET
             else:
                 wall_row += (WALL if has_south_wall else PASSAGE) + "   " + RESET
 
-            # Quina
             wall_row += WALL + " " + RESET
 
         out.append(wall_row)
@@ -175,19 +194,31 @@ def main() -> None:
     print(render(grid, entry=configs["ENTRY"], exit_=configs["EXIT"]))
 
 
+def show_menu() -> None:
+    print("\n")
+    main()
+    current_theme_name = theme_names[theme_index]
+    print("\n" + "=" * 20)
+    print(f"Theme: {current_theme_name}")
+    print("1. Re-generate a new maze")
+    print("2. Show/Hide path")
+    print("3. Rotate colors")
+    print("4. Quit")
+
+
 if __name__ == "__main__":
+    show_menu()
     while True:
-        os.system("clear")
-        print("\n")
-        main()
-        print("\n" + "=" * 20)
-        print("1. Re-generate a new maze")
-        print("2. Show/Hide path")
-        print("3. Rotate colors")
-        print("4. Quit")
         try:
             choice = input("Choice? (1-4): ")
-            if choice == '4':
+            if choice == '1':
+                print("Option (1. Re-generate a new maze) selected")
+            elif choice == '2':
+                print("Option (2. Show/Hide path) selected")
+            elif choice == '3':
+                theme_index = (theme_index + 1) % len(theme_names)
+                show_menu()
+            elif choice == '4':
                 break
         except EOFError:
             break
