@@ -50,11 +50,11 @@ theme_index = 0
 
 # 🔢 Matriz do "42" (1 = Bloco, 0 = Fundo)
 SHAPE_42 = [
-    "0010000111",
-    "0010000001",
-    "0011100111",
-    "0000100100",
-    "0000100111",
+    "00010011",
+    "00010001",
+    "00011011",
+    "00001010",
+    "00001011",
 ]
 
 
@@ -214,15 +214,21 @@ if __name__ == "__main__":
     show_menu()
     while True:
         try:
-            choice = input("Choice? (1-4): ")
-            if choice == '1':
+            choice = int(input("Choice? (1-4): "))
+            if choice == 1:
                 print("Option (1. Re-generate a new maze) selected")
-            elif choice == '2':
+            elif choice == 2:
                 print("Option (2. Show/Hide path) selected")
-            elif choice == '3':
+            elif choice == 3:
+                os.system("clear")
                 theme_index = (theme_index + 1) % len(theme_names)
                 show_menu()
-            elif choice == '4':
+            elif choice == 4:
                 break
+            else:
+                print("Option (2. Show/Hide path) selected")
+                break
+        except ValueError:
+            print("Please enter a number between 1-4...")
         except EOFError:
             break
