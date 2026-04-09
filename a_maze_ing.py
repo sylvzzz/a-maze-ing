@@ -61,8 +61,8 @@ THEMES = {
         "wall":    bg(3, 251, 62),
         "passage": bg(255, 255, 255),
         "entry":   bg(250, 220, 0),
-        "exit":    bg(255, 255, 255),
-        "number":  bg(0, 0, 0),
+        "exit":    bg(0, 0, 0),
+        "number":  bg(250, 220, 0),
     },
 }
 
