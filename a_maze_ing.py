@@ -15,46 +15,66 @@ RESET = "\033[0m"
 
 # Temas de cores
 THEMES = {
-    "default": {
+    "Default": {
         "wall":    bg(220, 220, 220),
         "passage": bg(10, 10, 10),
         "entry":   bg(180, 0, 220),
         "exit":    bg(200, 30, 30),
         "number":  bg(180, 180, 180),
     },
-    "ocean": {
+    "Ocean": {
         "wall":    bg(0, 80, 120),
         "passage": bg(0, 20, 40),
         "entry":   bg(0, 200, 180),
         "exit":    bg(255, 100, 0),
         "number":  bg(0, 120, 160),
     },
-    "forest": {
-        "wall":    bg(60, 90, 40),
-        "passage": bg(10, 20, 10),
+    "Earthy": {
+        "wall":    bg(47, 147, 1),
+        "passage": bg(94, 67, 39),
         "entry":   bg(180, 220, 50),
         "exit":    bg(200, 80, 30),
-        "number":  bg(80, 120, 60),
+        "number":  bg(0, 224, 228),
     },
-    "lava": {
-        "wall":    bg(80, 20, 0),
-        "passage": bg(15, 5, 0),
+    "Lava": {
+        "wall":    bg(205, 49, 5),
+        "passage": bg(40, 5, 5),
         "entry":   bg(255, 200, 0),
-        "exit":    bg(255, 60, 0),
-        "number":  bg(120, 40, 0),
+        "exit":    bg(0, 0, 0),
+        "number":  bg(255, 173, 5),
+    },
+    "BENFICA SLB GLORIOSO": {
+        "wall":    bg(210, 0, 0),
+        "passage": bg(20, 5, 0),
+        "entry":   bg(250, 220, 0),
+        "exit":    bg(255, 255, 255),
+        "number":  bg(255, 255, 255),
+    },
+    "PORTUGAL SELACAO DAS QUINAS CAMPEOES DO MUNDIAL 2026": {
+        "wall":    bg(215, 5, 5),
+        "passage": bg(40, 152, 20),
+        "entry":   bg(250, 220, 0),
+        "exit":    bg(255, 255, 255),
+        "number":  bg(250, 246, 62),
+    },
+    "ZAPORTING": {
+        "wall":    bg(3, 251, 62),
+        "passage": bg(255, 255, 255),
+        "entry":   bg(250, 220, 0),
+        "exit":    bg(255, 255, 255),
+        "number":  bg(0, 0, 0),
     },
 }
 
 theme_names = list(THEMES.keys())
 theme_index = 0
 
-# 🔢 Matriz do "42" (1 = Bloco, 0 = Fundo)
 SHAPE_42 = [
-    "00010011",
-    "00010001",
-    "00011011",
-    "00001010",
-    "00001011",
+    "000100110",
+    "000100010",
+    "000110110",
+    "000010100",
+    "000010110",
 ]
 
 
@@ -111,7 +131,7 @@ def cell_has_wall(grid: list[list[int]], r: int, c: int, direction: int,
     return bool(grid[r][c] & direction)
 
 
-def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
+def build_maze(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
     rows, cols = len(grid), len(grid[0])
 
     entry_pos = (entry[1], entry[0])
@@ -178,10 +198,10 @@ def render(grid: list[list[int]], entry: tuple, exit_: tuple) -> str:
     return "\n".join(out)
 
 
-def main() -> None:
-    configs = parse_values()
+def render_maze(config_file) -> None:
+    configs = parse_values(config_file)
 
-    if not is_valid_data(configs):
+    if not is_valid_data(configs, config_file):
         sys.exit(1)
 
     output_file = configs.get("OUTPUT_FILE", "maze.txt")
@@ -191,16 +211,15 @@ def main() -> None:
     expected_cols = configs["WIDTH"]
     wrong_cols = any(len(row) != expected_cols for row in grid)
     if len(grid) != expected_rows or wrong_cols:
-        print("Erro: Dimensões do grid inconsistentes com config.txt")
+        print(f"Error: Grid dimensions dont match {config_file}")
         sys.exit(1)
 
-    print(render(grid, entry=configs["ENTRY"], exit_=configs["EXIT"]))
+    print(build_maze(grid, entry=configs["ENTRY"], exit_=configs["EXIT"]))
 
 
-def show_menu() -> None:
-    print("\n")
-    main()
+def show_menu(config_file: str) -> None:
     current_theme_name = theme_names[theme_index]
+    render_maze(config_file)
     print("\n" + "=" * 20)
     print(f"Theme: {current_theme_name}")
     print("1. Re-generate a new maze")
@@ -210,25 +229,32 @@ def show_menu() -> None:
 
 
 if __name__ == "__main__":
-    os.system("clear")
-    show_menu()
-    while True:
-        try:
-            choice = int(input("Choice? (1-4): "))
-            if choice == 1:
-                print("Option (1. Re-generate a new maze) selected")
-            elif choice == 2:
-                print("Option (2. Show/Hide path) selected")
-            elif choice == 3:
-                os.system("clear")
-                theme_index = (theme_index + 1) % len(theme_names)
-                show_menu()
-            elif choice == 4:
+    args = sys.argv
+    if len(args) == 2:
+        config_file = args[1]
+        os.system("clear")
+        show_menu(config_file)
+        while True:
+            try:
+                choice = int(input("Choice? (1-4): "))
+                if choice == 1:
+                    print("Option (1. Re-generate a new maze) selected")
+                elif choice == 2:
+                    print("Option (2. Show/Hide path) selected")
+                elif choice == 3:
+                    os.system("clear")
+                    theme_index = (theme_index + 1) % len(theme_names)
+                    show_menu(config_file)
+                elif choice == 4:
+                    break
+                else:
+                    print("Option (2. Show/Hide path) selected")
+                    break
+            except ValueError:
+                print("Please enter a number between 1-4...")
+            except EOFError:
                 break
-            else:
-                print("Option (2. Show/Hide path) selected")
-                break
-        except ValueError:
-            print("Please enter a number between 1-4...")
-        except EOFError:
-            break
+    elif len(args) > 2:
+        print("Too many arguments. Usage: python3 a_maze_ing.py config.txt")
+    elif len(args) < 2:
+        print("Too few arguments. Usage: python3 a_maze_ing.py config.txt")

@@ -2,10 +2,10 @@ import sys
 from typing import Any
 
 
-def parse_values() -> dict[str, Any]:
+def parse_values(config_file: str) -> dict[str, Any]:
     values: dict[str, Any] = {}
     try:
-        with open("config.txt", "r") as file:
+        with open(config_file, "r") as file:
             for line in file:
                 line = line.strip()
 
@@ -24,16 +24,17 @@ def parse_values() -> dict[str, Any]:
                         parsed = raw.lower() == "true"
                     elif "," in raw:  # coordenadas
                         parsed = tuple(map(int, raw.split(",")))
-                    elif raw.isdigit():
+                    elif raw.lstrip("-").isdigit():
                         parsed = int(raw)
                     else:
                         parsed = raw
 
                     values[key] = parsed
     except FileNotFoundError:
-        print("Error: File Not Found")
+        print(f"Error: {config_file} File Not Found")
+        sys.exit(1)
     except IsADirectoryError:
-        print("Output file cannot be dirctory")
+        print(f"Config file ({config_file}/) cannot be dirctory")
         sys.exit(1)
     except Exception as err:
         print(err)
@@ -54,44 +55,84 @@ y axis = HEIGHT
 """
 
 
-def is_valid_data(configs: dict[str, Any]) -> bool:
-    width = configs["WIDTH"]
-    height = configs["HEIGHT"]
-    entry_row, entry_col = configs["ENTRY"]
-    exit_row, exit_col = configs["EXIT"]
-    if width <= 0:
-        print("Invalid width.")
-        return False
-    if height <= 0:
-        print("Invalid height.")
-        return False
-    if (entry_row < 0
-        or entry_row > width
-            or entry_col < 0
-            or entry_col > height):
-        print(f'Invalid entry coordinates. '
-              f'Entry coordinates: {configs["ENTRY"]}')
-        return False
-    if (exit_row < 0
-        or exit_row > width
-            or exit_col < 0
-            or exit_col > height):
-        print(f"Invalid exit coordinates. "
-              f"Exit coordinates: {configs['EXIT']}")
-        return False
+def whats_missing(configs: dict[str, Any], config_file: str) -> str:
+    try:
+        configs["WIDTH"]
+    except KeyError:
+        print(f"Missing WIDTH in {config_file}")
+
+    try:
+        configs["HEIGHT"]
+    except KeyError:
+        print(f"Missing HEIGHT in {config_file}")
+
+    try:
+        configs["ENTRY"]
+    except KeyError:
+        print(f"Missing ENTRY in {config_file}")
+
+    try:
+        configs["EXIT"]
+    except KeyError:
+        print(f"Missing EXIT in {config_file}")
+
+    try:
+        configs["OUTPUT_FILE"]
+    except KeyError:
+        print(f"Missing OUTPUT_FILE in {config_file}")
+
+    try:
+        configs["PERFECT"]
+    except KeyError:
+        print(f"Missing PERFECT in {config_file}")
+
+
+def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
+    try:
+        width = configs["WIDTH"]
+        height = configs["HEIGHT"]
+        entry_row, entry_col = configs["ENTRY"]
+        exit_row, exit_col = configs["EXIT"]
+        if width <= 0:
+            print(f"Invalid width. Width processed: {width}")
+            return False
+        if height <= 0:
+            print(f"Invalid height. Height processed: {height}")
+            return False
+        if (entry_row < 0
+            or entry_row > width
+                or entry_col < 0
+                or entry_col > height):
+            print(f'Invalid entry coordinates. '
+                  f'Entry coordinates: {configs["ENTRY"]}')
+            return False
+        if (exit_row < 0
+            or exit_row > width
+                or exit_col < 0
+                or exit_col > height):
+            print(f"Invalid exit coordinates. "
+                  f"Exit coordinates: {configs['EXIT']}")
+            return False
+    except FileNotFoundError:
+        print(f"File {config_file} not found...")
+        sys.exit(1)
+    except KeyError:
+        whats_missing(configs, config_file)
+        sys.exit(1)
     return True
 
 
-def print_data() -> None:
-    if is_valid_data(parse_values()):
-        configs = parse_values()
+def print_data(config_file) -> None:
+    if is_valid_data(parse_values(config_file), config_file):
+        configs = parse_values(config_file)
         for key, value in configs.items():
             if key == "ENTRY" or key == "EXIT":
                 print(f"Max Values: X:{configs['HEIGHT']} "
                       f"Y:{configs['WIDTH']}")
             print(f"{key} : {value}")
             print()
+    print(configs)
 
 
 if __name__ == "__main__":
-    print_data()
+    print_data(sys.argv[1])
