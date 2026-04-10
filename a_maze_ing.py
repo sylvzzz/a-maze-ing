@@ -47,7 +47,6 @@ if __name__ == "__main__":
                 elif choice == 4:
                     break
                 else:
-                    print("Option (2. Show/Hide path) selected")
                     break
             except ValueError:
                 print("Please enter a number between 1-4...")
