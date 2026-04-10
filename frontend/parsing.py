@@ -55,7 +55,7 @@ y axis = HEIGHT
 """
 
 
-def whats_missing(configs: dict[str, Any], config_file: str) -> str:
+def whats_missing(configs: dict[str, Any], config_file: str) -> None:
     try:
         configs["WIDTH"]
     except KeyError:
@@ -122,7 +122,7 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
     return True
 
 
-def print_data(config_file) -> None:
+def print_data(config_file: str) -> None:
     if is_valid_data(parse_values(config_file), config_file):
         configs = parse_values(config_file)
         for key, value in configs.items():

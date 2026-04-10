@@ -1,5 +1,5 @@
 CONFIG	= config.txt
-MAIN	= rascunho.py
+MAIN	= a_maze_ing.py
 
 build:
 	pip install -r requirements.txt

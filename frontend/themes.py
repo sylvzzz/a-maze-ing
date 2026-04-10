@@ -1,5 +1,5 @@
 
-def bg(r, g, b):
+def bg(r: int, g: int, b: int) -> str:
     return f"\033[48;2;{r};{g};{b}m"
 
 
