@@ -1,0 +1,37 @@
+from parsing import parse_values, is_valid_data
+
+def direction_to_coordinates(path: str, config_file: str) -> tuple:
+    configs = parse_values(config_file)
+    entry = configs["ENTRY"]
+    if path == "S":
+        print("Moving south")
+        return (entry[1], entry[0] + 1)
+    elif path == "N":
+        print("Moving north")
+        return (entry[1], entry[0] - 1)
+    elif path == "E":
+        print("Moving east")
+        return (entry[1] + 1, entry[0])
+    elif path == "W":
+        print("Moving west")
+        return (entry[1], entry[0] - 1)
+
+def print_directions(path: list) -> None:
+    for direction in path:
+        print(direction)
+
+
+def main() -> None:
+    configs: dict[str] = parse_values("../config.txt")
+    entry: str = configs["ENTRY"]
+    path = ["S", "N", "N", "E", "S"]
+    resolution: list[tuple[int, int]] = []
+    # print_directions(path)
+    print("Printing path and transforming it to coordinates\n")
+    for direction in path:
+        print(direction_to_coordinates(direction,"../config.txt"))
+        resolution.append(direction_to_coordinates(direction,"../config.txt"))
+    print("\nResolution: ", resolution)
+
+if __name__ == "__main__":
+    main()
