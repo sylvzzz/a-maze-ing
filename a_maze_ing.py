@@ -5,7 +5,7 @@ import frontend as ui
 Path = List[Tuple[int, int]]
 
 
-def show_menu(config_file: str) -> None:
+def show_menu() -> None:
     current_theme_name = ui.theme_names[ui.theme_index]
     print("\n" + "=" * 20)
     print(f"Theme: {current_theme_name}")
@@ -21,7 +21,7 @@ if __name__ == "__main__":
         config_file = args[1]
         os.system('cls' if os.name == 'nt' else 'clear')
         ui.render_maze(config_file)
-        show_menu(config_file)
+        show_menu()
         path_is_showing = False
         while True:
             try:
@@ -37,17 +37,17 @@ if __name__ == "__main__":
                     elif path_is_showing is True:
                         ui.render_maze(config_file)
                         path_is_showing = False
-                    show_menu(config_file)
+                    show_menu()
                 elif choice == 3:
                     path_is_showing = False
                     os.system('cls' if os.name == 'nt' else 'clear')
                     ui.theme_index = (ui.theme_index + 1) % len(ui.theme_names)
                     ui.render_maze(config_file)
-                    show_menu(config_file)
+                    show_menu()
                 elif choice == 4:
                     break
                 else:
-                    break
+                    print("Please enter a valid choice (1-4)...")
             except ValueError:
                 print("Please enter a number between 1-4...")
             except EOFError:
