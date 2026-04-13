@@ -24,14 +24,19 @@ def print_directions(path: list) -> None:
 def main() -> None:
     configs: dict[str] = parse_values("../config.txt")
     entry: str = configs["ENTRY"]
-    path = ["S", "N", "N", "E", "S"]
+    with open("resolution.txt") as file:
+        try:
+            content: str = file.read()
+            directions: list = list(content)
+        except FileNotFoundError:
+            print("File not found...")
+            return
     resolution: list[tuple[int, int]] = []
     # print_directions(path)
     print("Printing path and transforming it to coordinates\n")
-    for direction in path:
-        print(direction_to_coordinates(direction,"../config.txt"))
+    for direction in directions:
         resolution.append(direction_to_coordinates(direction,"../config.txt"))
-    print("\nResolution: ", resolution)
+    print("\nResolution coordinates: ", resolution)
 
 if __name__ == "__main__":
     main()
