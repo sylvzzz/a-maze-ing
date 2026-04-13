@@ -48,6 +48,46 @@ class Maze:
         current_cell.remove_wall(direction)
         neighbor.remove_wall(OPPOSITE[direction])
 
+    def restore_wall(self, current_cell: Cell, neighbor: Cell) -> None:
+        if neighbor.x > current_cell.x:
+            direction = "E"
+        elif neighbor.x < current_cell.x:
+            direction = "W"
+        elif neighbor.y > current_cell.y:
+            direction = "S"
+        elif neighbor.y < current_cell.y:
+            direction = "N"
+        else:
+            raise ValueError("Cells are not neighbors")
+        current_cell.add_wall(direction)
+        neighbor.add_wall(OPPOSITE[direction])
+
+    def open_borders(self) -> None:
+        ex, ey = self.entry
+        cell = self.get_cell(ex, ey)
+
+        if ex == 0:
+            cell.remove_wall("W")
+        if ex == self.width - 1:
+            cell.remove_wall("E")
+        if ey == 0:
+            cell.remove_wall("N")
+        if ey == self.height - 1:
+            cell.remove_wall("S")
+        
+        xx, xy = self.exit
+        cell = self.get_cell(xx, xy)
+
+        if xx == 0:
+            cell.remove_wall("W")
+        if xx == self.width - 1:
+            cell.remove_wall("E")
+        if xy == 0:
+            cell.remove_wall("N")
+        if xy == self.height - 1:
+            cell.remove_wall("S")
+    
+
     def _get_42_coords(self) -> set[tuple[int, int]]:
         pat_small = [
             "#.#.###",

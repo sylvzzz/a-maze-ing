@@ -22,6 +22,18 @@ class Cell:
             self.west = False
         else:
             raise ValueError("Invalid direction")
+    
+    def add_wall(self, direction: str) -> None:
+        if direction == directions.N:
+            self.north = True
+        elif direction == directions.E:
+            self.east = True
+        elif direction == directions.S:
+            self.south = True
+        elif direction == directions.W:
+            self.west = True
+        else:
+            raise ValueError("Invalid direction")
 
     def has_wall(self, direction: str) -> bool:
         if direction == directions.N:

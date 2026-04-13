@@ -1,41 +1,48 @@
-PSEUDOCODIGO: maze_engine/solver.py
+from .cell import Cell
+from .maze import Maze
+from collections import deque
 
-OBJETIVO
-- Resolver maze com BFS e devolver caminho minimo entry -> exit.
 
-ESTRUTURA MazeSolver
-- recebe Maze
+class MazeSolver:
+    def __init__(self, maze: Maze) -> None:
+        self.maze = maze
+        self.path: list[str] = []
+    
+    def _bfs(self) -> dict[tuple, tuple | None]:
+        start_x, start_y = self.maze.entry
+        start_cell = self.maze.get_cell(*self.maze.entry)
+        line = deque([start_cell])
+        parents = {(start_x, start_y): None}
 
-METODO solve()
-1. reset_search_state no maze
-2. start = celula entry
-3. goal = celula exit
-4. queue = [start]
-5. start.visited = True
+        while line:
+            current = line.popleft()
+            if (current.x, current.y) == self.maze.exit:
+                break
+            for (direction, neighbor) in self.maze.get_neighbors(current):
+                if current.has_wall(direction):
+                    continue
+                if (neighbor.x, neighbor.y) in parents:
+                    continue
+                parents[(neighbor.x, neighbor.y)] = ((current.x, current.y), direction)
+                line.append(neighbor)
+        return parents
 
-6. enquanto queue nao vazia:
-   6.1 current = remover primeiro da queue
-   6.2 se current == goal:
-       devolver caminho reconstruido por parent
-   6.3 para cada direcao cardinal:
-       - se existir parede nessa direcao, ignorar
-       - obter neighbor por delta
-       - se neighbor valido e nao visitado:
-         marcar visited
-         neighbor.parent = current
-         adicionar neighbor na queue
+    def solve(self) -> list[str]:
+        parents = self._bfs()
+        path = []
+        current = self.maze.exit
 
-7. se goal nunca encontrado: devolver lista vazia
+        while parents[current]:
+            (parent_coords, direction) = parents[current]
+            path.append(direction)
+            current = parent_coords
 
-METODO _rebuild_path(goal)
-1. path = []
-2. current = goal
-3. enquanto current existe:
-   adicionar (current.x, current.y)
-   current = current.parent
-4. inverter path
-5. devolver path
+        path.reverse()
+        self.path = path
+        return self.path
 
-METODO solve_as_directions()
-1. converter caminho de coordenadas para sequencia N/E/S/W
-2. devolver lista de direcoes
+    
+
+
+		
+		
