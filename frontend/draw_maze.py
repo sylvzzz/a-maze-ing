@@ -202,6 +202,7 @@ def render_maze(config_file: str, output_file: str) -> None:
 
 def render_solution(config_file: str,
                     output_file: str) -> list[tuple[int, int]]:
+    import time
     configs = parse_values(config_file)
 
     if not is_valid_data(configs, config_file):
@@ -217,6 +218,19 @@ def render_solution(config_file: str,
         sys.exit(1)
 
     path = get_path(directions, entry)
-    print(build_maze(grid, entry=entry, exit_=exit_, stamp42=stamp42,
-                     path=path))
+
+    for i in range(len(path)):
+        partial_path = path[:i+1]
+
+        print("\033[H\033[J", end="")  # limpa o terminal (efeito animação)
+
+        print(build_maze(
+            grid,
+            entry=entry,
+            exit_=exit_,
+            stamp42=stamp42,
+            path=partial_path
+        ))
+
+        time.sleep(0.02)  # pausa de 0.2 segundos
     return path
