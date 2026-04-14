@@ -41,4 +41,7 @@ class MazeEncoder:
         # path
         result += "".join(self.path) + "\n"
 
+        result += ";".join(f"{y},{x}"
+                           for x, y in sorted(self.maze.stamp42)) + "\n"
+
         return result

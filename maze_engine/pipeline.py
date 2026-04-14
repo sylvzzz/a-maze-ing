@@ -12,6 +12,7 @@ class MazePipeline:
         entry: tuple[int, int],
         exit: tuple[int, int] | None = None,
         perfect: bool = True,
+        output_file: str = "maze.txt",
     ) -> None:
         if exit is None:
             exit = (width - 1, height - 1)
@@ -20,19 +21,19 @@ class MazePipeline:
         self.entry = entry
         self.exit = exit
         self.perfect = perfect
-
+        self.output_file = output_file
         # create maze
         self.maze = Maze(width, height, entry, exit, perfect)
         # create path
         self.path: list[str] = []
 
     def write_to_file(self, text: str) -> None:
-        with open("maze.txt", "w") as file:
+        with open(self.output_file, "w") as file:
             file.write(text)
 
     def run(self) -> list[str]:
         # generate Maze
-        generator = MazeGenerator(self.maze, seed=42)
+        generator = MazeGenerator(self.maze)
         generator.generate()
 
         # solve Maze

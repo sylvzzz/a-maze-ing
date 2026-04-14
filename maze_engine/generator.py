@@ -6,7 +6,7 @@ from .directions import DIRECTIONS, MOVES, OPPOSITE
 
 
 class MazeGenerator:
-    def __init__(self, maze: Maze, seed: int) -> None:
+    def __init__(self, maze: Maze, seed: int | None = None) -> None:
         self.maze = maze
         self.seed = seed
 
