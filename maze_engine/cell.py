@@ -1,4 +1,4 @@
-import directions
+from . import directions
 
 
 class Cell:
@@ -22,7 +22,7 @@ class Cell:
             self.west = False
         else:
             raise ValueError("Invalid direction")
-    
+
     def add_wall(self, direction: str) -> None:
         if direction == directions.N:
             self.north = True

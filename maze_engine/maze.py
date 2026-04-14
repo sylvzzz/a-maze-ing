@@ -2,6 +2,7 @@ from typing import Optional
 from .cell import Cell
 from .directions import DIRECTIONS, MOVES, OPPOSITE
 
+
 class Maze:
     def __init__(self, width: int, height: int, entry: tuple[int, int],
                  exit: tuple[int, int], perfect: bool) -> None:
@@ -66,27 +67,28 @@ class Maze:
         ex, ey = self.entry
         cell = self.get_cell(ex, ey)
 
-        if ex == 0:
-            cell.remove_wall("W")
-        if ex == self.width - 1:
-            cell.remove_wall("E")
-        if ey == 0:
-            cell.remove_wall("N")
-        if ey == self.height - 1:
-            cell.remove_wall("S")
-        
+        if cell is not None:
+            if ex == 0:
+                cell.remove_wall("W")
+            if ex == self.width - 1:
+                cell.remove_wall("E")
+            if ey == 0:
+                cell.remove_wall("N")
+            if ey == self.height - 1:
+                cell.remove_wall("S")
+
         xx, xy = self.exit
         cell = self.get_cell(xx, xy)
 
-        if xx == 0:
-            cell.remove_wall("W")
-        if xx == self.width - 1:
-            cell.remove_wall("E")
-        if xy == 0:
-            cell.remove_wall("N")
-        if xy == self.height - 1:
-            cell.remove_wall("S")
-    
+        if cell is not None:
+            if xx == 0:
+                cell.remove_wall("W")
+            if xx == self.width - 1:
+                cell.remove_wall("E")
+            if xy == 0:
+                cell.remove_wall("N")
+            if xy == self.height - 1:
+                cell.remove_wall("S")
 
     def _get_42_coords(self) -> set[tuple[int, int]]:
         pat_small = [

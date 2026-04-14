@@ -26,4 +26,3 @@ BIT_VALUES = {
     S: 4,
     W: 8
 }
-

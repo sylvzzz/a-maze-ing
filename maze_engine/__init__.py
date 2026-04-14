@@ -1,13 +1,13 @@
-PSEUDOCODIGO: maze_engine/__init__.py
+from .cell import Cell
+from .maze import Maze
+from .generator import MazeGenerator
+from .solver import MazeSolver
+from .encoder import MazeEncoder
+from .pipeline import MazePipeline
 
-OBJETIVO
-- Definir API publica do modulo maze_engine.
-
-EXPORTS PREVISTOS
-- Maze
-- MazeGenerator
-- MazeSolver
-- MazeEncoder
-- build_maze_from_config
-- save_maze_file
-- generate_and_save
+__all__ = ["Cell",
+           "Maze",
+           "MazeGenerator",
+           "MazeSolver",
+           "MazeEncoder",
+           "MazePipeline"]

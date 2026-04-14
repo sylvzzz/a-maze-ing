@@ -9,13 +9,14 @@ class MazeGenerator:
     def __init__(self, maze: Maze, seed: int) -> None:
         self.maze = maze
         self.seed = seed
-    
+
     def generate(self) -> None:
         random.seed(self.seed)
         self.maze.embed_42()
 
         start_x, start_y = self.maze.entry
         start_cell = self.maze.get_cell(start_x, start_y)
+        assert start_cell is not None
         self._dfs(start_cell)
         self.maze.open_borders()
         if not self.maze.perfect:
@@ -23,9 +24,10 @@ class MazeGenerator:
 
     def _dfs(self, current: Cell) -> None:
         current.mark_visited()
-        
+
         neighbors = self.maze.get_neighbors(current)
-        available = [(dir, neighbor) for (dir, neighbor) in neighbors if neighbor.visited is False]
+        available = [(dir, neighbor) for (dir, neighbor) in neighbors
+                     if neighbor.visited is False]
         random.shuffle(available)
 
         for (dir, neighbor) in available:
@@ -40,10 +42,10 @@ class MazeGenerator:
                 top_x = x + dx
                 top_y = y + dy
                 if (
-                top_x < 0
-                or top_y < 0
-                or top_x + 2 > self.maze.width
-                or top_y + 2 > self.maze.height
+                    top_x < 0
+                    or top_y < 0
+                    or top_x + 2 > self.maze.width
+                    or top_y + 2 > self.maze.height
                 ):
                     continue
                 is_open = True
@@ -52,7 +54,9 @@ class MazeGenerator:
                         cx = top_x + bx
                         cy = top_y + by
                         cell = self.maze.get_cell(cx, cy)
-
+                        if cell is None:
+                            is_open = False
+                            continue
                         if bx < 2:
                             if cell.has_wall("E"):
                                 is_open = False
@@ -72,7 +76,7 @@ class MazeGenerator:
                 current_cell = self.maze.get_cell(x, y)
                 if current_cell is not None:
                     cells_maze.append(current_cell)
-        
+
         random.shuffle(cells_maze)
 
         for cell in cells_maze:
@@ -92,4 +96,3 @@ class MazeGenerator:
                 if self._has_open_area(cell.x, cell.y):
                     cell.add_wall(direction)
                     neighbor.add_wall(OPPOSITE[direction])
-
