@@ -1,5 +1,6 @@
-from .parsing import parse_values, is_valid_data
-from .themes import THEMES
+from frontend.parsing import parse_values, is_valid_data
+from frontend.themes import THEMES
+from frontend.directions import get_path
 import sys
 
 SHAPE_42 = [
@@ -31,19 +32,34 @@ def is_42(r: int, c: int, start_r: int, start_c: int) -> bool:
     return False
 
 
-def parse_grid(path: str) -> list[list[int]]:
-    grid = []
+def parse_maze_file(maze_file: str) -> tuple[list[list[int]], tuple[int, int], tuple[int, int], list[str]]:
+    grid: list[list[int]] = []
+    directions: list[str] = []
+    entry: tuple[int, int] = (0, 0)
+    exit_: tuple[int, int] = (0, 0)
     try:
-        with open(path) as f:
+        with open(maze_file) as f:
+            # Read grid until empty line
             for line in f:
                 line = line.strip()
                 if not line:
-                    continue
+                    break
                 grid.append([int(v, 16) for v in line.split()])
+
+            # Read entry coordinate
+            entry = tuple(int(x) for x in f.readline().strip().split(","))
+
+            # Read exit coordinate
+            exit_ = tuple(int(x) for x in f.readline().strip().split(","))
+
+            # Read directions
+            directions = list(f.readline().strip())
+
     except FileNotFoundError:
-        print(f"Erro: ficheiro '{path}' não encontrado.")
+        print(f"File'{maze_file}' not found ...")
         sys.exit(1)
-    return grid
+
+    return grid, entry, exit_, directions
 
 
 def cell_has_wall(
@@ -176,7 +192,7 @@ def render_maze(config_file: str) -> None:
         sys.exit(1)
 
     output_file = configs.get("OUTPUT_FILE", "maze.txt")
-    grid = parse_grid(output_file)
+    grid, entry, exit_, directions = parse_maze_file("maze.txt")
 
     expected_rows = configs["HEIGHT"]
     expected_cols = configs["WIDTH"]
@@ -188,14 +204,14 @@ def render_maze(config_file: str) -> None:
     print(build_maze(grid, entry=configs["ENTRY"], exit_=configs["EXIT"]))
 
 
-def render_solution(config_file: str) -> None:
+def render_solution(config_file: str) -> list[tuple[int, int]]:
     configs = parse_values(config_file)
 
     if not is_valid_data(configs, config_file):
         sys.exit(1)
 
-    output_file = configs.get("OUTPUT_FILE", "maze.txt")
-    grid = parse_grid(output_file)
+    output_file = configs.get("OUTPUT_FILE")
+    grid, entry, exit_, directions = parse_maze_file("maze.txt")
 
     expected_rows = configs["HEIGHT"]
     expected_cols = configs["WIDTH"]
@@ -204,46 +220,13 @@ def render_solution(config_file: str) -> None:
         print(f"Error: Grid dimensions dont match {config_file}")
         sys.exit(1)
 
-    entry = configs["ENTRY"]
-    exit_ = configs["EXIT"]
+    path = get_path(directions, entry)
+    print(build_maze(grid, entry=entry, exit_=exit_, path=path))
+    return path
 
-    # Hardcoded — substituir pelo output do algoritmo
-    hardcoded_path = [
-        (entry[1],      entry[0]),
-        (entry[1],      entry[0] + 1),
-        (entry[1],      entry[0] + 2),
-        (entry[1],      entry[0] + 3),
-        (entry[1],      entry[0] + 4),
-        (entry[1],      entry[0] + 5),
-        (entry[1],      entry[0] + 6),
-        (entry[1],      entry[0] + 7),
-        (entry[1],      entry[0] + 8),
-        (entry[1],      entry[0] + 9),
-        (entry[1],      entry[0] + 10),
-        (entry[1],      entry[0] + 11),
-        (entry[1],      entry[0] + 12),
-        (entry[1],      entry[0] + 13),
-        (entry[1],      entry[0] + 14),
-        (entry[1],      entry[0] + 15),
-        (entry[1],      entry[0] + 16),
-        (entry[1],      entry[0] + 17),
-        (entry[1],      entry[0] + 18),
-        (entry[1],      entry[0] + 19),
-        (entry[1] + 1,  entry[0] + 19),
-        (entry[1] + 2,  entry[0] + 19),
-        (entry[1] + 3,  entry[0] + 19),
-        (entry[1] + 4,  entry[0] + 19),
-        (entry[1] + 5,  entry[0] + 19),
-        (entry[1] + 6,  entry[0] + 19),
-        (entry[1] + 7,  entry[0] + 19),
-        (entry[1] + 8,  entry[0] + 19),
-        (entry[1] + 9,  entry[0] + 19),
-        (entry[1] + 10, entry[0] + 19),
-        (entry[1] + 11, entry[0] + 19),
-        (entry[1] + 12, entry[0] + 19),
-        (entry[1] + 13, entry[0] + 19),
-        (entry[1] + 14, entry[0] + 19),
-        (entry[1] + 15, entry[0] + 19),
-    ]
-
-    print(build_maze(grid, entry=entry, exit_=exit_, path=hardcoded_path))
+if __name__ == "__main__":
+    # grid, entry, exit_, directions = parse_maze_file("maze.txt")
+    # print(f"Entry: {entry}")
+    # print(f"Exit: {exit_}")
+    # print(f"Directions: {directions}")
+    print(render_solution("config.txt"))

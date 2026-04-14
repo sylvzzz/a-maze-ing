@@ -18,7 +18,6 @@ if __name__ == "__main__":
     args = sys.argv
     if len(args) == 2:
         config_file = args[1]
-        Path: List[Tuple[int, int]] = ui.get_path(config_file)
         os.system('cls' if os.name == 'nt' else 'clear')
         ui.render_maze(config_file)
         show_menu()

@@ -91,8 +91,8 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
     try:
         width = configs["WIDTH"]
         height = configs["HEIGHT"]
-        entry_row, entry_col = configs["ENTRY"]
-        exit_row, exit_col = configs["EXIT"]
+        entry_col, entry_row = configs["ENTRY"]  # x=col, y=row
+        exit_col, exit_row = configs["EXIT"]
         if width <= 0:
             print(f"Invalid width. Width processed: {width}")
             return False
@@ -100,16 +100,16 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
             print(f"Invalid height. Height processed: {height}")
             return False
         if (entry_row < 0
-            or entry_row > width
+                or entry_row >= height  # linha -> height
                 or entry_col < 0
-                or entry_col > height):
+                or entry_col >= width):  # coluna -> width
             print(f'Invalid entry coordinates. '
                   f'Entry coordinates: {configs["ENTRY"]}')
             return False
         if (exit_row < 0
-            or exit_row > width
+                or exit_row >= height  # linha -> height
                 or exit_col < 0
-                or exit_col > height):
+                or exit_col >= width):  # coluna -> width
             print(f"Invalid exit coordinates. "
                   f"Exit coordinates: {configs['EXIT']}")
             return False
