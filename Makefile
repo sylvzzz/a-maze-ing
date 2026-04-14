@@ -1,25 +1,33 @@
-PSEUDOCODIGO: Makefile
+CONFIG	= config.txt
+MAIN	= a_maze_ing.py
 
-OBJETIVO
-- Descrever tarefas de desenvolvimento sem comandos reais.
+build:
+	pip install -r requirements.txt
 
-TARGET build
-1. preparar artefactos do projeto
+install: build
+	pip install dist/*.whl
+	pip install flake8 mypy
 
-TARGET install
-1. instalar dependencias de runtime
-2. instalar ferramentas de lint
+run:
+	python3 $(MAIN) $(CONFIG)
 
-TARGET run
-1. executar aplicacao principal com config.txt
+debug:
+	python3 -m pdb $(MAIN) $(CONFIG)
 
-TARGET debug
-1. executar aplicacao em modo debug
+clean:
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	find . -type d -name "build" -exec rm -rf {} +
+	find . -type f -name "*.pyc" -exec rm -f {} +
 
-TARGET clean
-1. apagar caches temporarias
-2. apagar ficheiros compilados
 
-TARGET lint
-1. correr verificador de estilo
-2. correr verificador de tipos
+lint:
+	python3 -m flake8 . --exclude a-maze-ing
+	python3 -m mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+
+lint-strict:
+	python3 -m flake8 . --exclude a-maze-ing
+	python3 -m mypy . --strict --exclude a-maze-ing
+
+
+.PHONY: build install run debug clean lint lint-strict
