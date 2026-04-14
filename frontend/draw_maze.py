@@ -32,7 +32,9 @@ def is_42(r: int, c: int, start_r: int, start_c: int) -> bool:
     return False
 
 
-def parse_maze_file(maze_file: str) -> tuple[list[list[int]], tuple[int, int], tuple[int, int], list[str]]:
+def parse_maze_file(maze_file: str) -> tuple[list[list[int]],
+                                             tuple[int, int],
+                                             tuple[int, int], list[str]]:
     grid: list[list[int]] = []
     directions: list[str] = []
     entry: tuple[int, int] = (0, 0)
@@ -46,12 +48,11 @@ def parse_maze_file(maze_file: str) -> tuple[list[list[int]], tuple[int, int], t
                     break
                 grid.append([int(v, 16) for v in line.split()])
 
-            # Read entry coordinate
-            entry = tuple(int(x) for x in f.readline().strip().split(","))
+            r, c = map(int, f.readline().strip().split(","))
+            entry = (r, c)
 
-            # Read exit coordinate
-            exit_ = tuple(int(x) for x in f.readline().strip().split(","))
-
+            r, c = map(int, f.readline().strip().split(","))
+            exit_ = (r, c)
             # Read directions
             directions = list(f.readline().strip())
 
@@ -185,14 +186,12 @@ def build_maze(
     return "\n".join(out)
 
 
-def render_maze(config_file: str) -> None:
+def render_maze(config_file: str,  output_file: str) -> None:
     configs = parse_values(config_file)
 
     if not is_valid_data(configs, config_file):
         sys.exit(1)
-
-    output_file = configs.get("OUTPUT_FILE", "maze.txt")
-    grid, entry, exit_, directions = parse_maze_file("maze.txt")
+    grid, entry, exit_, directions = parse_maze_file(output_file)
 
     expected_rows = configs["HEIGHT"]
     expected_cols = configs["WIDTH"]
@@ -204,14 +203,14 @@ def render_maze(config_file: str) -> None:
     print(build_maze(grid, entry=configs["ENTRY"], exit_=configs["EXIT"]))
 
 
-def render_solution(config_file: str) -> list[tuple[int, int]]:
+def render_solution(config_file: str,
+                    output_file: str) -> list[tuple[int, int]]:
     configs = parse_values(config_file)
 
     if not is_valid_data(configs, config_file):
         sys.exit(1)
 
-    output_file = configs.get("OUTPUT_FILE")
-    grid, entry, exit_, directions = parse_maze_file("maze.txt")
+    grid, entry, exit_, directions = parse_maze_file(output_file)
 
     expected_rows = configs["HEIGHT"]
     expected_cols = configs["WIDTH"]
@@ -223,10 +222,3 @@ def render_solution(config_file: str) -> list[tuple[int, int]]:
     path = get_path(directions, entry)
     print(build_maze(grid, entry=entry, exit_=exit_, path=path))
     return path
-
-if __name__ == "__main__":
-    # grid, entry, exit_, directions = parse_maze_file("maze.txt")
-    # print(f"Entry: {entry}")
-    # print(f"Exit: {exit_}")
-    # print(f"Directions: {directions}")
-    print(render_solution("config.txt"))

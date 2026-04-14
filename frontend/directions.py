@@ -1,7 +1,5 @@
-from frontend.parsing import parse_values
-
-
-def direction_to_coordinates(direction: str, current: tuple[int, int]) -> tuple[int, int]:
+def direction_to_coordinates(direction: str,
+                             current: tuple[int, int]) -> tuple[int, int]:
     row, col = current
     if direction == "S":
         return (row + 1, col)
@@ -11,6 +9,9 @@ def direction_to_coordinates(direction: str, current: tuple[int, int]) -> tuple[
         return (row, col + 1)
     elif direction == "W":
         return (row, col - 1)
+    else:
+        print("Unknown direction...")
+        return (row, col)
 
 
 def print_directions(path: list) -> None:
@@ -18,7 +19,8 @@ def print_directions(path: list) -> None:
         print(direction)
 
 
-def get_path(directions: list[str], entry: tuple[int, int]) -> list[tuple[int, int]]:
+def get_path(directions: list[str],
+             entry: tuple[int, int]) -> list[tuple[int, int]]:
     resolution: list[tuple[int, int]] = [entry]
     current = entry
 
@@ -27,8 +29,3 @@ def get_path(directions: list[str], entry: tuple[int, int]) -> list[tuple[int, i
         resolution.append(current)
 
     return resolution
-
-
-if __name__ == "__main__":
-    print(get_path())
-    

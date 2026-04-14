@@ -1,7 +1,8 @@
 import sys
 import os
-from typing import List, Tuple
 import frontend as ui
+
+# output_file = configs.get("OUTPUT_FILE", "maze.txt")
 
 
 def show_menu() -> None:
@@ -19,7 +20,7 @@ if __name__ == "__main__":
     if len(args) == 2:
         config_file = args[1]
         os.system('cls' if os.name == 'nt' else 'clear')
-        ui.render_maze(config_file)
+        ui.render_maze(config_file, "maze.txt")
         show_menu()
         path_is_showing = False
         while True:
@@ -31,17 +32,17 @@ if __name__ == "__main__":
                 elif choice == 2:
                     os.system('cls' if os.name == 'nt' else 'clear')
                     if path_is_showing is False:
-                        ui.render_solution(config_file)
+                        ui.render_solution(config_file, "maze.txt")
                         path_is_showing = True
                     elif path_is_showing is True:
-                        ui.render_maze(config_file)
+                        ui.render_maze(config_file, "maze.txt")
                         path_is_showing = False
                     show_menu()
                 elif choice == 3:
                     path_is_showing = False
                     os.system('cls' if os.name == 'nt' else 'clear')
                     ui.theme_index = (ui.theme_index + 1) % len(ui.theme_names)
-                    ui.render_maze(config_file)
+                    ui.render_maze(config_file, "maze.txt")
                     show_menu()
                 elif choice == 4:
                     break
