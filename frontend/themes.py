@@ -31,7 +31,7 @@ THEMES = {
     "Benfica": {
         "wall":    bg(210, 0, 0),
         "passage": bg(20, 5, 0),
-        "entry":   bg(250, 220, 0),
+        "entry":   bg(140, 198, 253),
         "exit":    bg(255, 255, 255),
         "number":  bg(255, 255, 255),
         "path":    bg(255, 220, 0),

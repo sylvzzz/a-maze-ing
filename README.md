@@ -2,9 +2,13 @@
 
 ---
 
+
+
 # A-Maze-ing
 
 > A maze generated in hexadecimal represented on the terminal via a `.txt` file with its properties and configs. A grid of hex values, an entry, an exit, a path, and the 42 logo, stamped in cell.
+
+<img src="demo.png">
 
 ## Description
 
