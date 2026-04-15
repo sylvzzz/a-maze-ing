@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mazegen"
+version = "1.0.0"
+description = "Tools to generate and solve mazes"
+readme = "README.md"
+requires-python = ">=3.10.12"
+authors = [
+  { name = "Diogo Silva", email = "dbotelho@student.42lisboa.com" },
+  { name = "Gabriel Machado", email = "gguia-ma@student.42lisboa.com" }
+]
+
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/sylvzzz/a-maze-ing"
+
+[tool.setuptools]
+packages = ["maze_engine"]
+
+[project.optional-dependencies]
+dev = [
+  "mypy",
+  "flake8"
+]
+
+[tool.mypy]
+requires-python = ">=3.10"
+strict = true
+ignore_missing_imports = true
+
+[tool.flake8]
+max-line-length = 100
+exclude = [".git", "__pycache__", "build", "dist"]

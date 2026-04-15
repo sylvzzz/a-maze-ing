@@ -5,8 +5,9 @@ build:
 	pip install -r requirements.txt
 
 install: build
-	pip install dist/*.whl
-	pip install flake8 mypy
+	pip install build
+	python3 -m build
+
 
 run:
 	python3 $(MAIN) $(CONFIG)
