@@ -217,7 +217,8 @@ def render_solution(config_file: str,
         print(f"Error: Grid dimensions dont match {config_file}")
         sys.exit(1)
 
-    path = get_path(directions, entry)
+    ex, ey = entry
+    path = get_path(directions, (ey, ex))
 
     for i in range(len(path)):
         partial_path = path[:i+1]
