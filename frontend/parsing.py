@@ -47,7 +47,7 @@ WIDTH=20
 HEIGHT=15
 ENTRY=0,0
 EXIT=19,14
-OUTPUT_FILE=maze.txt
+OUTPUT_FILE=
 PERFECT=True
 
 x axis = WIDTH
@@ -91,6 +91,7 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
     try:
         width = configs["WIDTH"]
         height = configs["HEIGHT"]
+        is_perfect = configs["PERFECT"]
         entry_col, entry_row = configs["ENTRY"]  # x=col, y=row
         exit_col, exit_row = configs["EXIT"]
         if width <= 0:
@@ -113,6 +114,9 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
             print(f"Invalid exit coordinates. "
                   f"Exit coordinates: {configs['EXIT']}")
             return False
+        if is_perfect is not True and is_perfect is not False:
+            print("Configuration (PERFECT) isnt True neither false...")
+            return False
     except FileNotFoundError:
         print(f"File {config_file} not found...")
         sys.exit(1)
@@ -131,7 +135,7 @@ def print_data(config_file: str) -> None:
                       f"Y:{configs['WIDTH']}")
             print(f"{key} : {value}")
             print()
-    print(configs)
+        print(configs)
 
 
 if __name__ == "__main__":
