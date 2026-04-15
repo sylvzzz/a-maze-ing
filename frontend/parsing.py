@@ -30,6 +30,9 @@ def parse_values(config_file: str) -> dict[str, Any]:
                         parsed = raw
 
                     values[key] = parsed
+    except ValueError:
+        print(f"Invalid values, Check {config_file}...")
+        sys.exit(1)
     except FileNotFoundError:
         print(f"Error: {config_file} File Not Found")
         sys.exit(1)
@@ -92,6 +95,7 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
         width = configs["WIDTH"]
         height = configs["HEIGHT"]
         is_perfect = configs["PERFECT"]
+        output_file = configs["OUTPUT_FILE"]
         entry_col, entry_row = configs["ENTRY"]  # x=col, y=row
         exit_col, exit_row = configs["EXIT"]
         if width <= 0:
@@ -117,8 +121,17 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
         if is_perfect is not True and is_perfect is not False:
             print("Configuration (PERFECT) isnt True neither false...")
             return False
+        if not isinstance(output_file, str) or output_file.strip() == "":
+            print(f"Invalid OUTPUT_FILE in {config_file}: empty value")
+            return False
+    except ValueError:
+        print(f"Invalid values in {config_file}...")
+        sys.exit(1)
     except FileNotFoundError:
         print(f"File {config_file} not found...")
+        sys.exit(1)
+    except TypeError:
+        print(f"Invalid values, Check {config_file}...")
         sys.exit(1)
     except KeyError:
         whats_missing(configs, config_file)
