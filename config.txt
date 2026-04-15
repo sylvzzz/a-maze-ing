@@ -10,7 +10,6 @@ OUTPUT_FILE=maze.txt
 PERFECT=False
 =======
 ENTRY=0,0
-EXIT=16,28
+EXIT=39,34
 OUTPUT_FILE=maze.txt
-PERFECT=false
->>>>>>> 4aa3316df897b609543d0b7a2a8c06848af4a237
+PERFECT=True
