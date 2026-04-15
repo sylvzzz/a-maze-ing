@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by dbotelho and gguia-ma.*
+*This project has been created as part of the 42 curriculum by <a href ="https://github.com/sylvzzz">dbotelho</a> and <a href ="https://github.com/gboogzzz">gguia-ma</a>.*
 
 ---
 
@@ -6,9 +6,15 @@
 
 > A maze generated in hexadecimal represented on the terminal via a `.txt` file with its properties and configs. A grid of hex values, an entry, an exit, a path, and the 42 logo, stamped in cell.
 
+## Description
 
-```
-293953D11579515553D3
+`A-Maze-ing` is a terminal-based maze generator and solver written in Python. It generates random mazes using depth-first search (recursive backtracker) to generate the maze, solves them via breadth-first search, and renders everything in your terminal with ASCII. There are multiple themes, a solution path you can toggle on and off, and — as a nod to 42 School — the number "42" is always stamped somewhere in the middle of the maze, made of blocked cells you can't walk through.
+
+The project is split into a backend (generation, solving, encoding) and a frontend (rendering, themes, user interaction) and a middleware (parsing from files). The backend is also reusable as a module to future projects that will need maze generation, for example Pac-Man (Milestone 4)
+
+# Maze represented in output file
+```bash
+293953D11579515553D3   # maze grid
 AAAA9696E93C3AD5543A
 C6AAC3A956C56C5513C2
 93AAD46A97955553EABA
@@ -24,18 +30,49 @@ E92A96C2D2D53C6BC6C2
 C3C53939157ABA956D12
 D457C6C6C5546C455568
 
-0,0
-19,14
-SSENNESSSSSESSEESWSWSSENENESESESEENWNNNNNNNENEEEEESSWSSSWSSENENNNENNENNWWWWNNEEEESESESSWSESWSWWSSSENNESSESWSWNWWSESWWSEEEENES
+0,0      # entry
+19,14    # exit
+SSENNESSSSSESSEESWSWSSENEN     # resolution 
 ```
 
 ---
+# 🧱 Maze Hexadecimal Encoding Guide
 
-## Description
+Each cell of the maze is represented by a **single hexadecimal digit (0–F)**.  
+This digit encodes which walls are **closed (1)** or **open (0)** using bits.
 
-`A-Maze-ing` is a terminal-based maze generator and solver written in Python. It generates random mazes using depth-first search (recursive backtracker) to generate the maze, solves them via breadth-first search, and renders everything in your terminal with ASCII. There are multiple themes, a solution path you can toggle on and off, and — as a nod to 42 School — the number "42" is always stamped somewhere in the middle of the maze, made of blocked cells you can't walk through.
+| Hex | Binary | North (N) | East (E) | South (S) | West (W) | Meaning |
+|-----|--------|----------|----------|----------|----------|---------|
+| 0   | 0000   | 0        | 0        | 0        | 0        | No walls |
+| 1   | 0001   | 1        | 0        | 0        | 0        | North wall |
+| 2   | 0010   | 0        | 1        | 0        | 0        | East wall |
+| 3   | 0011   | 1        | 1        | 0        | 0        | North + East |
+| 4   | 0100   | 0        | 0        | 1        | 0        | South wall |
+| 5   | 0101   | 1        | 0        | 1        | 0        | North + South |
+| 6   | 0110   | 0        | 1        | 1        | 0        | East + South |
+| 7   | 0111   | 1        | 1        | 1        | 0        | North + East + South |
+| 8   | 1000   | 0        | 0        | 0        | 1        | West wall |
+| 9   | 1001   | 1        | 0        | 0        | 1        | North + West |
+| A   | 1010   | 0        | 1        | 0        | 1        | East + West |
+| B   | 1011   | 1        | 1        | 0        | 1        | North + East + West |
+| C   | 1100   | 0        | 0        | 1        | 1        | South + West |
+| D   | 1101   | 1        | 0        | 1        | 1        | North + South + West |
+| E   | 1110   | 0        | 1        | 1        | 1        | East + South + West |
+| F   | 1111   | 1        | 1        | 1        | 1        | All walls closed |
 
-The project is split into a backend (generation, solving, encoding) and a frontend (rendering, themes, user interaction) and a middleware (parsing from files). The backend is also reusable as a module to future projects that will need maze generation, for example Pac-Man (Milestone 4)
+---
+
+## 🧠 Bit Mapping
+
+| Bit Position | Value | Direction |
+|-------------|------|----------|
+| 0 (LSB)     | 1    | North    |
+| 1           | 2    | East     |
+| 2           | 4    | South    |
+| 3           | 8    | West     |
+
+- **1 = wall closed 🚧**
+- **0 = wall open 🚪**
 
 ---
 
@@ -215,12 +252,12 @@ python3 -m build
 
 ```
 .
-├── a_maze_ing.py            # entry point
-├── config.txt               # default configuration
+├── a_maze_ing.py            # main program
+├── config.txt               # default configuration file
 ├── Makefile
 ├── mazegen-1.0.0-py3-none-any.whl   # installable package
-├── pyproject.toml           # package build config
-├── backend/
+├── requirements.txt         # requirements for the project
+├── maze_engine/
 │   ├── maze.py              # Maze class — grid, stamp42, neighbors, walls
 │   ├── cell.py              # Cell class — individual tile with wall state
 │   ├── generator.py         # MazeGenerator — DFS + optional wall removal
@@ -248,62 +285,36 @@ python3 -m build
 
 ### Planning
 
-We started by mapping out the data flow: config → maze → file → render. The first week focused on getting the DFS generator and file format right. The second week was the frontend and the 42 stamp rendering. The last stretch was fixing edge cases — the coordinate axis swap between internal `(x, y)` and file `(row, col)`, the `stamp42` not being written to the output file, and theme colors for the 42 pattern not showing up due to an undefined variable.
-
-### What worked well
-
-The pipeline architecture (`MazePipeline`) made it easy to swap out pieces independently — we could test the encoder without touching the renderer, and vice versa. Separating `backend` and `frontend` into distinct packages kept things clean and made the reusable module straightforward to extract.
+Our plan to this project was just randomly coding parts of our structure, wich for many would seem badly planned, but for us was the simplest way to learn and get things done, we started out by randomly parsing the configs from the files, then proceded to study the algorithms (DFS and BFS), how to write "drawings" to the terminal, how to define diferent themes, and we both got our parts done, after testing with a lot of hardcode and thousands of `print()` we merged our branches and got our program running.
 
 ### What could be improved
 
-The coordinate convention (`(x, y)` internally, `(row, col)` in the file) caused subtle bugs that took a while to track down. A single canonical coordinate type throughout would have saved time. The 42 stamp position is currently always centered — it could be randomized within a safe margin for more variety.
+As we both aren't always working at 42Lisbon all the time we could've planned better variable names, how the values were parsed and read.
+
+For example my frontend read the maze grid and separated each charactes in the draw_maze with a space, and in the configs my colleage `gguia-ma` parsed the values to the class on lowercase, wich is common, but my dict of values (dict in python if you dont know is basicly the same structure as a `.json` file) parses them in uppercase as showed in the subject, so overall we should've planned better variables, functions etc.
 
 ### Tools used
 
 - `mypy` for static type checking
 - `flake8` for style linting
-- `pytest` for unit tests (not submitted)
-- `build` for packaging the `mazegen` module
-- Claude (Anthropic) — see Resources below
+- Claude - faster debugging and bug fixing between `frontend` and `maze_engine`
+- W3Schools - Mini tool for getting RGB colors, python functions and methods and much more
 
 ---
 
 ## Resources
 
-- [Maze generation algorithms — Wikipedia](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
-- [Jamis Buck's Maze Algorithms](http://www.jamisbuck.org/mazes/) — excellent visual breakdowns of DFS, Prim's, Kruskal's and more
-- [Recursive Backtracker — Think Labyrinth](https://www.astrolog.org/labyrnth/algrithm.htm)
-- [Python `typing` module docs](https://docs.python.org/3/library/typing.html)
-- [PEP 257 — Docstring conventions](https://peps.python.org/pep-0257/)
-- [Python Packaging User Guide](https://packaging.python.org/en/latest/)
+- [RGB mini tool](https://www.w3schools.com/colors/colors_rgb.asp)
+- [BFS Maze Algorithm](https://www.geeksforgeeks.org/dsa/breadth-first-search-or-bfs-for-a-graph/)
+- [Claude](https://claude.ai)
 
 ### AI usage
 
 Claude (Anthropic) was used during this project for the following tasks:
 
-- **Debugging the `stamp42` pipeline** — the coords were stored as `(x, y)` internally but the encoder was either not writing them at all (missing line in `encode()`) or writing them in the wrong order, causing the 42 to render as an empty set or rotated 90°. Claude helped trace the bug through the encoder → file → renderer chain by inspecting each step in sequence.
-- **Fixing a `NameError` in the renderer** — `NUMBER_WALL` was referenced in `build_maze` but never defined; Claude identified the undefined variable and suggested replacing both occurrences with the already-defined `NUMBER`.
-- **Generating the README structure**, which was then reviewed, corrected, and filled in with project-specific content.
-
-All AI-generated content was reviewed, understood, and tested before being included in the project.
+- **Debugging the `stamp42` pipeline** — the coords were stored as `(x, y)` internally but the encoder was either not writing them at all (missing line in `encode()`) or writing them in the wrong order, causing the 42 to render as an empty set or inverted coordinates. Claude helped trace the bug through the encoder → file → renderer chain by inspecting each step in sequence.
+- **Fixing the pipeline maze_engine → frontend in the renderer** — Looking at what we talked about in the improvements section claude helped us bringing the final pice all togheter
 
 ---
 
-## A note on the 42 coordinate swap
-
-If you ever touch `embed_42()` or the encoder, keep this in mind: `stamp42` internally stores `(x, y)` = `(col, row)`, but the maze file stores them as `(row, col)`. The encoder handles the swap explicitly:
-
-```python
-# in MazeEncoder.encode()
-result += ";".join(f"{y},{x}" for x, y in sorted(self.maze.stamp42)) + "\n"
-```
-
-If you write `x, y` directly, the 42 will render rotated 90°. Don't ask how we know.
-
----
-
-## Known quirks
-
-- The terminal needs to support true color for themes to look right. If everything appears gray, your terminal may not support 24-bit ANSI codes.
-- Very small mazes (roughly under 10×8) may not fit the 42 pattern — the program prints a warning and continues without it.
-- The solution path is computed once at generation time and doesn't update if the maze file is manually edited.
+## Made by <a href ="https://github.com/sylvzzz">dbotelho</a> and <a href ="https://github.com/gboogzzz">gguia-ma</a>  @42Lisbon.
