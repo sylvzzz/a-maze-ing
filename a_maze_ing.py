@@ -3,6 +3,7 @@ import os
 import frontend as ui
 import maze_engine as engine
 from typing import Any
+import time
 
 
 def show_themes() -> None:
@@ -15,7 +16,7 @@ def show_themes() -> None:
 
 def show_menu() -> None:
     current_theme_name = ui.theme_names[ui.theme_index]
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 55)
     print(f"Theme: {current_theme_name}")
     print("1. Re-generate a new maze")
     print("2. Show/Hide path")
@@ -110,7 +111,32 @@ if __name__ == "__main__":
                         os.system('cls' if os.name == 'nt' else 'clear')
                         ui.render_maze(config_file, configs["output_file"])
                         show_menu()
-                        print("SHUT UP!")
+                        print("SHUT UP PLEASE!")
+                    elif choice == 42:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        print("#include <stdio.h>")
+                        print("\nint main()")
+                        print("{")
+                        print('     char *student1 = "dbotelho";')
+                        print('     char *student2 = "gguia-ma";')
+                        print('     printf("The best a-maze-ing'
+                              ' was made by: %s and %s", student1, student2);')
+                        print('     return 0;')
+                        print('}\n')
+                        time.sleep(3)
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        print("$ cc -Wall -Wextra -Werror a-maze-ing.c")
+                        time.sleep(3)
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        print("$ ./a-maze-ing")
+                        print("Segmentation fault (core dumped)")
+                        time.sleep(3)
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        input("Press if piscine python gave yu nightmares...")
+                        path_is_showing = False
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        ui.render_maze(config_file, configs["output_file"])
+                        show_menu()
                     elif choice == 8:
                         break
                     else:
