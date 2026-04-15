@@ -71,28 +71,56 @@ class MazeGenerator:
     def _open_extra_walls(self) -> None:
         cells_maze: list[Cell] = []
 
+        # reunir células válidas
         for y in range(self.maze.height):
             for x in range(self.maze.width):
-                current_cell = self.maze.get_cell(x, y)
-                if current_cell is not None:
-                    cells_maze.append(current_cell)
+                cell = self.maze.get_cell(x, y)
+                if cell is not None:
+                    if (cell.x, cell.y) not in self.maze.stamp42:
+                        cells_maze.append(cell)
 
         random.shuffle(cells_maze)
 
+        # quantidade controlada de loops
+        total_cells = self.maze.width * self.maze.height
+        extra_openings = int(total_cells * 0.05)
+        # testa: 0.03 → mais fechado
+        #        0.05 → ideal
+        #        0.08 → mais loops
+
+        opened = 0
+
         for cell in cells_maze:
-            if (cell.x, cell.y) in self.maze.stamp42:
-                continue
-            for direction in DIRECTIONS:
+
+            if opened >= extra_openings:
+                break
+
+            directions = DIRECTIONS[:]
+            random.shuffle(directions)
+
+            for direction in directions:
+
                 if not cell.has_wall(direction):
                     continue
+
                 dx, dy = MOVES[direction]
                 nx = cell.x + dx
                 ny = cell.y + dy
+
                 neighbor = self.maze.get_cell(nx, ny)
+
                 if neighbor is None:
                     continue
+
+                # abrir parede temporariamente
                 cell.remove_wall(direction)
                 neighbor.remove_wall(OPPOSITE[direction])
+
+                # verificar se cria área aberta
                 if self._has_open_area(cell.x, cell.y):
                     cell.add_wall(direction)
                     neighbor.add_wall(OPPOSITE[direction])
+                    continue
+
+                opened += 1
+                break

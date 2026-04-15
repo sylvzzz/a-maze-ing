@@ -64,31 +64,31 @@ class Maze:
         neighbor.add_wall(OPPOSITE[direction])
 
     def open_borders(self) -> None:
-        ex, ey = self.entry
-        cell = self.get_cell(ex, ey)
 
-        if cell is not None:
-            if ex == 0:
+        def open_one_border(x: int, y: int) -> None:
+            cell = self.get_cell(x, y)
+            assert cell is not None
+
+            # abrir apenas UMA parede para fora
+            if x == 0:
                 cell.remove_wall("W")
-            if ex == self.width - 1:
+
+            elif x == self.width - 1:
                 cell.remove_wall("E")
-            if ey == 0:
+
+            elif y == 0:
                 cell.remove_wall("N")
-            if ey == self.height - 1:
+
+            elif y == self.height - 1:
                 cell.remove_wall("S")
 
-        xx, xy = self.exit
-        cell = self.get_cell(xx, xy)
+            # abrir entry
+            ex, ey = self.entry
+            open_one_border(ex, ey)
 
-        if cell is not None:
-            if xx == 0:
-                cell.remove_wall("W")
-            if xx == self.width - 1:
-                cell.remove_wall("E")
-            if xy == 0:
-                cell.remove_wall("N")
-            if xy == self.height - 1:
-                cell.remove_wall("S")
+            # abrir exit
+            xx, xy = self.exit
+            open_one_border(xx, xy)
 
     def _get_42_coords(self) -> set[tuple[int, int]]:
         pat_small = [
