@@ -2,6 +2,7 @@ import sys
 import os
 import frontend as ui
 import maze_engine as engine
+from typing import Any
 
 
 def show_menu() -> None:
@@ -19,7 +20,7 @@ if __name__ == "__main__":
     args = sys.argv
     if len(args) == 2:
         config_file = args[1]
-        configs: dict = ui.parse_values(config_file)
+        configs: dict[str, Any] = ui.parse_values(config_file)
         if ui.is_valid_data(configs, config_file):
             configs = {k.lower(): v for k, v in configs.items()}
             maze = engine.MazePipeline(**configs)

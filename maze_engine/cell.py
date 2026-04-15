@@ -55,7 +55,7 @@ class Cell:
         if self.visited is True:
             self.visited = False
 
-    def get_walls(self) -> dict:
+    def get_walls(self) -> dict[str, bool]:
         return {
             directions.N: self.north,
             directions.E: self.east,

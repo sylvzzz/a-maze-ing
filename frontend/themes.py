@@ -10,7 +10,7 @@ THEMES = {
         "entry":   bg(180, 0, 220),
         "exit":    bg(200, 30, 30),
         "number":  bg(180, 180, 180),
-        "path":    bg(0, 200, 100),      # verde a destacar
+        "path":    bg(0, 200, 100),
     },
     "Ocean": {
         "wall":    bg(0, 80, 120),
@@ -18,7 +18,7 @@ THEMES = {
         "entry":   bg(0, 200, 180),
         "exit":    bg(255, 100, 0),
         "number":  bg(0, 120, 160),
-        "path":    bg(0, 255, 220),      # ciano brilhante
+        "path":    bg(0, 255, 220),
     },
     "Earthy": {
         "wall":    bg(47, 147, 1),
@@ -26,38 +26,22 @@ THEMES = {
         "entry":   bg(180, 220, 50),
         "exit":    bg(200, 80, 30),
         "number":  bg(0, 224, 228),
-        "path":    bg(255, 220, 80),     # amarelo terra
+        "path":    bg(255, 220, 80),
     },
-    "Lava": {
-        "wall":    bg(205, 49, 5),
-        "passage": bg(40, 5, 5),
-        "entry":   bg(255, 200, 0),
-        "exit":    bg(0, 0, 0),
-        "number":  bg(255, 173, 5),
-        "path":    bg(255, 120, 0),      # laranja lava
-    },
-    "BENFICA SLB GLORIOSO": {
+    "Benfica": {
         "wall":    bg(210, 0, 0),
         "passage": bg(20, 5, 0),
         "entry":   bg(250, 220, 0),
         "exit":    bg(255, 255, 255),
         "number":  bg(255, 255, 255),
-        "path":    bg(255, 220, 0),      # amarelo/ouro
+        "path":    bg(255, 220, 0),
     },
-    "PORTUGAL SELACAO DAS QUINAS CAMPEOES DO MUNDIAL 2026": {
-        "wall":    bg(215, 5, 5),
-        "passage": bg(40, 152, 20),
-        "entry":   bg(250, 220, 0),
-        "exit":    bg(255, 255, 255),
-        "number":  bg(250, 246, 62),
-        "path":    bg(255, 230, 0),      # amarelo dourado
-    },
-    "ZAPORTING": {
-        "wall":    bg(3, 251, 62),
-        "passage": bg(255, 255, 255),
-        "entry":   bg(250, 220, 0),
-        "exit":    bg(0, 0, 0),
-        "number":  bg(250, 220, 0),
-        "path":    bg(0, 180, 255),      # azul elétrico
+    "BubbleGum": {
+        "wall":    bg(255, 198, 246),
+        "passage": bg(255, 254, 246),
+        "entry":   bg(210, 0, 0),
+        "exit":    bg(140, 198, 253),
+        "number":  bg(140, 198, 253),
+        "path":    bg(255, 211, 158),
     },
 }

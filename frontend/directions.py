@@ -14,7 +14,7 @@ def direction_to_coordinates(direction: str,
         return (row, col)
 
 
-def print_directions(path: list) -> None:
+def print_directions(path: list[str]) -> None:
     for direction in path:
         print(direction)
 

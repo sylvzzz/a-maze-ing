@@ -1,15 +1,9 @@
 # Maze Configuration File
 # Lines starting with # are comments and are ignored
 
-WIDTH=40
-HEIGHT=35
-<<<<<<< HEAD
+WIDTH=20
+HEIGHT=15
 ENTRY=0,10
-EXIT=39,34
+EXIT=18,13
 OUTPUT_FILE=maze.txt
 PERFECT=False
-=======
-ENTRY=0,0
-EXIT=39,34
-OUTPUT_FILE=maze.txt
-PERFECT=True
