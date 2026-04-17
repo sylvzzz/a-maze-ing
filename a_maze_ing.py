@@ -109,9 +109,14 @@ if __name__ == "__main__":
                     elif choice == 67:
                         path_is_showing = False
                         os.system('cls' if os.name == 'nt' else 'clear')
+                        print("Segmentation fault (core dumped)")
+                        time.sleep(2)
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        print("SHUT THE F*** UP PLEASE!")
+                        time.sleep(2)
+                        os.system('cls' if os.name == 'nt' else 'clear')
                         ui.render_maze(config_file, configs["output_file"])
                         show_menu()
-                        print("SHUT UP PLEASE!")
                     elif choice == 42:
                         os.system('cls' if os.name == 'nt' else 'clear')
                         print("#include <stdio.h>")
@@ -122,7 +127,7 @@ if __name__ == "__main__":
                         print('     printf("The best a-maze-ing'
                               ' was made by: %s and %s", student1, student2);')
                         print('     return 0;')
-                        print('}\n')
+                        print('}')
                         time.sleep(3)
                         os.system('cls' if os.name == 'nt' else 'clear')
                         print("$ cc -Wall -Wextra -Werror a-maze-ing.c")
