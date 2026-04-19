@@ -20,7 +20,7 @@ def parse_values(config_file: str) -> dict[str, Any]:
                     parsed: Any
                     if raw.lower() in ("true", "false"):
                         parsed = raw.lower() == "true"
-                    elif "," in raw:  # coordenadas
+                    elif "," in raw:
                         parsed = tuple(map(int, raw.split(",")))
                     elif raw.lstrip("-").isdigit():
                         parsed = int(raw)
