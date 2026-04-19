@@ -95,8 +95,8 @@ git clone git@github.com:sylvzzz/a-maze-ing.git a-maze-ing
 cd a-maze-ing
 
 # (optional but recommended) create a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv test_env
+source test_env/bin/activate
 
 # install dependencies (if any are listed)
 make install
@@ -311,13 +311,16 @@ For example my frontend read the maze grid and separated each charactes in the d
 - [RGB mini tool](https://www.w3schools.com/colors/colors_rgb.asp)
 - [BFS Maze Algorithm](https://www.geeksforgeeks.org/dsa/breadth-first-search-or-bfs-for-a-graph/)
 - [Claude](https://claude.ai)
+- [Opencode](https://github.com/anomalyco/opencode)
 
 ### AI usage
 
-Claude (Anthropic) was used during this project for the following tasks:
+Claude was used during this project for the following tasks:
 
 - **Debugging the `stamp42` pipeline** — the coords were stored as `(x, y)` internally but the encoder was either not writing them at all (missing line in `encode()`) or writing them in the wrong order, causing the 42 to render as an empty set or inverted coordinates. Claude helped trace the bug through the encoder → file → renderer chain by inspecting each step in sequence.
 - **Fixing the pipeline maze_engine → frontend in the renderer** — Looking at what we talked about in the improvements section claude helped us bringing the final pice all togheter
+
+Opencode was used basicly used to helped us create the clearest documentation and README.md possible.
 
 ---
 

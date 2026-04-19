@@ -9,7 +9,6 @@ def parse_values(config_file: str) -> dict[str, Any]:
             for line in file:
                 line = line.strip()
 
-                # Ignorar comentários e linhas vazias
                 if not line or line.startswith("#"):
                     continue
 
@@ -18,7 +17,6 @@ def parse_values(config_file: str) -> dict[str, Any]:
                     key = key.strip()
                     raw = raw.strip()
 
-                    # Converter tipos automaticamente
                     parsed: Any
                     if raw.lower() in ("true", "false"):
                         parsed = raw.lower() == "true"
@@ -96,7 +94,7 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
         height = configs["HEIGHT"]
         is_perfect = configs["PERFECT"]
         output_file = configs["OUTPUT_FILE"]
-        entry_col, entry_row = configs["ENTRY"]  # x=col, y=row
+        entry_col, entry_row = configs["ENTRY"]
         exit_col, exit_row = configs["EXIT"]
         if width <= 0:
             print(f"Invalid width. Width processed: {width}")
@@ -105,16 +103,16 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
             print(f"Invalid height. Height processed: {height}")
             return False
         if (entry_row < 0
-                or entry_row >= height  # linha -> height
+                or entry_row >= height
                 or entry_col < 0
-                or entry_col >= width):  # coluna -> width
+                or entry_col >= width):
             print(f'Invalid entry coordinates. '
                   f'Entry coordinates: {configs["ENTRY"]}')
             return False
         if (exit_row < 0
-                or exit_row >= height  # linha -> height
+                or exit_row >= height
                 or exit_col < 0
-                or exit_col >= width):  # coluna -> width
+                or exit_col >= width):
             print(f"Invalid exit coordinates. "
                   f"Exit coordinates: {configs['EXIT']}")
             return False

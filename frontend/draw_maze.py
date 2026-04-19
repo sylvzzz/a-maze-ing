@@ -3,13 +3,6 @@ from frontend.themes import THEMES
 from frontend.directions import get_path
 import sys
 
-SHAPE_42 = [
-    "00100110",
-    "00100010",
-    "00110110",
-    "00010100",
-    "00010110",
-]
 
 N, S, E, W = 0x8, 0x4, 0x2, 0x1
 
@@ -24,14 +17,6 @@ def get_theme() -> dict[str, str]:
     return ui.THEMES[ui.theme_names[ui.theme_index]]
 
 
-def is_42(r: int, c: int, start_r: int, start_c: int) -> bool:
-    rr = r - start_r
-    cc = c - start_c
-    if 0 <= rr < len(SHAPE_42) and 0 <= cc < len(SHAPE_42[0]):
-        return SHAPE_42[rr][cc] == "1"
-    return False
-
-
 def parse_maze_file(maze_file: str) -> tuple[list[list[int]],
                                              tuple[int, int],
                                              tuple[int, int], list[str],
@@ -41,7 +26,6 @@ def parse_maze_file(maze_file: str) -> tuple[list[list[int]],
     entry: tuple[int, int] = (0, 0)
     exit_: tuple[int, int] = (0, 0)
     with open(maze_file) as f:
-        # grid (igual ao que tens)
         for line in f:
             line = line.strip()
             if not line:
@@ -54,7 +38,6 @@ def parse_maze_file(maze_file: str) -> tuple[list[list[int]],
         exit_ = (r, c)
         directions = list(f.readline().strip())
 
-        # stamp42
         stamp42: set[tuple[int, int]] = set()
         line = f.readline().strip()
         if line:
@@ -223,7 +206,7 @@ def render_solution(config_file: str,
     for i in range(len(path)):
         partial_path = path[:i+1]
 
-        print("\033[H\033[J", end="")  # limpa o terminal (efeito animação)
+        print("\033[H\033[J", end="")
 
         print(build_maze(
             grid,
@@ -233,5 +216,5 @@ def render_solution(config_file: str,
             path=partial_path
         ))
 
-        time.sleep(0.02)  # pausa de 0.2 segundos
+        time.sleep(0.02)
     return path
