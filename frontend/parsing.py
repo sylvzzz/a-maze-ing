@@ -123,12 +123,15 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
             print(f"Invalid OUTPUT_FILE in {config_file}: empty value")
             return False
     except ValueError:
-        print(f"Invalid values in {config_file}...")
+        whats_missing(configs, config_file)
+        print(f"Invalid values, Check {config_file}...")
         sys.exit(1)
     except FileNotFoundError:
+        whats_missing(configs, config_file)
         print(f"File {config_file} not found...")
         sys.exit(1)
     except TypeError:
+        whats_missing(configs, config_file)
         print(f"Invalid values, Check {config_file}...")
         sys.exit(1)
     except KeyError:

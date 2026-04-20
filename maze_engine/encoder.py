@@ -1,6 +1,7 @@
 from .directions import BIT_VALUES, DIRECTIONS
 from .maze import Maze
 from .cell import Cell
+import sys
 
 
 class MazeEncoder:
@@ -16,7 +17,20 @@ class MazeEncoder:
                 value += BIT_VALUES[direction]
         return hex(value)[2:].upper()
 
+    def _check_stamp42(self) -> None:
+        entry = self.maze.entry
+        exit_ = self.maze.exit
+        stamp42 = self.maze.stamp42
+
+        if entry in stamp42:
+            print(f"Entry coordinates {entry} cannot be in 42 logo")
+            sys.exit(1)
+        if exit_ in stamp42:
+            print(f"Exit coordinates {exit_} cannot be in 42 logo")
+            sys.exit(1)
+
     def encode(self) -> str:
+        self._check_stamp42()
         result = ""
         # grid
         for y in range(self.maze.height):
