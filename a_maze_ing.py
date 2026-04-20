@@ -145,9 +145,9 @@ if __name__ == "__main__":
                     elif choice == 8:
                         break
                     else:
-                        print("Please enter a valid choice (1-6)...")
+                        print("Please enter a valid choice (1-8)...")
                 except ValueError:
-                    print("Please enter a number between 1-6...")
+                    print("Please enter a number between 1-8...")
                 except EOFError:
                     break
     elif len(args) > 2:
