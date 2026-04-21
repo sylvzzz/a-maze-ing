@@ -82,13 +82,13 @@ class Maze:
             elif y == self.height - 1:
                 cell.remove_wall("S")
 
-            # abrir entry
-            ex, ey = self.entry
-            open_one_border(ex, ey)
+        # open entry
+        ex, ey = self.entry
+        open_one_border(ex, ey)
 
-            # abrir exit
-            xx, xy = self.exit
-            open_one_border(xx, xy)
+        # open exit
+        xx, xy = self.exit
+        open_one_border(xx, xy)
 
     def _get_42_coords(self) -> set[tuple[int, int]]:
         pat_small = [

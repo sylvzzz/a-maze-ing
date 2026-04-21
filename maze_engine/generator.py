@@ -81,12 +81,12 @@ class MazeGenerator:
 
         random.shuffle(cells_maze)
 
-        # quantidade controlada de loops
+        # controls how much loops are in the maze
         total_cells = self.maze.width * self.maze.height
         extra_openings = int(total_cells * 0.05)
-        # testa: 0.03 → mais fechado
-        #        0.05 → ideal
-        #        0.08 → mais loops
+        # test: 0.03  more close
+        #        0.05  ideal
+        #        0.08  more loops
 
         opened = 0
 
@@ -112,11 +112,11 @@ class MazeGenerator:
                 if neighbor is None:
                     continue
 
-                # abrir parede temporariamente
+                # open wall temporary
                 cell.remove_wall(direction)
                 neighbor.remove_wall(OPPOSITE[direction])
 
-                # verificar se cria área aberta
+                # check if it creates an open area
                 if self._has_open_area(cell.x, cell.y):
                     cell.add_wall(direction)
                     neighbor.add_wall(OPPOSITE[direction])
