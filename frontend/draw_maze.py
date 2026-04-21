@@ -4,7 +4,7 @@ from frontend.directions import get_path
 import sys
 
 
-N, S, E, W = 0x8, 0x4, 0x2, 0x1
+N, S, E, W = 0x1, 0x4, 0x2, 0x8
 
 RESET = "\033[0m"
 

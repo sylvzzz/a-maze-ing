@@ -27,7 +27,7 @@ Or from source (requires `build`):
 
 ```bash
 pip install build
-python -m build
+python3 -m build
 pip install dist/mazegen-1.0.0-py3-none-any.whl
 ```
 
@@ -125,7 +125,7 @@ MazePipeline(
     width: int,           # number of columns
     height: int,          # number of rows
     entry: tuple[int, int],
-    exit: tuple[int, int] | None,   # defaults to (width-1, height-1)
+    exit: tuple[int, int],   # defaults to (width-1, height-1)
     perfect: bool,        # True = perfect maze, False = maze with loops
     output_file: str      # path to write the encoded output
 )

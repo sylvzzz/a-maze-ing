@@ -18,7 +18,6 @@ class MazeGenerator:
         start_cell = self.maze.get_cell(start_x, start_y)
         assert start_cell is not None
         self._dfs(start_cell)
-        self.maze.open_borders()
         if not self.maze.perfect:
             self._open_extra_walls()
 

@@ -10,7 +10,7 @@ class MazePipeline:
         width: int,
         height: int,
         entry: tuple[int, int],
-        exit: tuple[int, int] | None = None,
+        exit: tuple[int, int],
         perfect: bool = True,
         output_file: str = "maze.txt",
     ) -> None:
