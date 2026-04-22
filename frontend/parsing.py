@@ -96,6 +96,12 @@ def is_valid_data(configs: dict[str, Any], config_file: str) -> bool:
         output_file = configs["OUTPUT_FILE"]
         entry_col, entry_row = configs["ENTRY"]
         exit_col, exit_row = configs["EXIT"]
+        if configs["EXIT"] == configs["ENTRY"]:
+            print(f"Entry and Exit cannot be equal!")
+            return False
+        if output_file.endswith(".txt") == False:
+            print(f"File extension is invalid")
+            return False
         if width <= 0:
             print(f"Invalid width. Width processed: {width}")
             return False
